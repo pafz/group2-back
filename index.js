@@ -21,7 +21,7 @@ app.get('/', (req, res) =>
 app.use('/uploads', express.static('uploads'));
 app.use('/users', require('./routes/users'));
 app.use('/events', require('./routes/events'));
-app.use('/reviews', require('./routes/ereviews'));
+app.use('/reviews', require('./routes/reviews'));
 
 app.use(handleTypeError);
 
