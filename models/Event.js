@@ -23,6 +23,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: [true, "Place is required"],
     },
+    capacity: {
+      type: Number,
+      required: [true, "Capacity is required"],
+    },
     
     image:String,
     likes: [{ type: ObjectId, ref: "User" }],
@@ -35,8 +39,7 @@ const EventSchema = new mongoose.Schema(
 EventSchema.methods.toJSON = function () {
   const event = this._doc;  
   delete eventatedAt;
-  delete eventatedAt;  
-  delete event;
+  delete eventatedAt;    
   return event
 }
 
