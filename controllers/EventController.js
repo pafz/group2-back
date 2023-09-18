@@ -1,21 +1,23 @@
-const Event = require("../models/Event");
-const User = require("../models/user");
+const Event = require('../models/Event');
+const User = require('../models/User');
 
 const EventController = {
   async getAll(req, res) {
     try {
-      const events = await Event.find().populate("userId").populate("commentIds");
+      const events = await Event.find()
+        .populate('userId')
+        .populate('commentIds');
 
       res.send(events);
     } catch (error) {
       console.error(error);
-      res.status(500).send({ message: "There was a problem" });
+      res.status(500).send({ message: 'There was a problem' });
     }
   },
 
   async getById(req, res) {
     try {
-      const event = await Event.findById(req.params._id).populate("commentIds")
+      const event = await Event.findById(req.params._id).populate('commentIds');
 
       if (!event) {
         return res.status(400).send({ message: "This event doesn't exist" });
@@ -30,10 +32,10 @@ const EventController = {
   async getEventsByName(req, res) {
     try {
       if (req.params.title.length > 20) {
-        return res.status(400).send("To long search");
+        return res.status(400).send('To long search');
       }
 
-      const title = new RegExp(req.params.title, "i");
+      const title = new RegExp(req.params.title, 'i');
 
       const events = await Event.find({ title });
 
@@ -45,21 +47,21 @@ const EventController = {
     } catch (error) {
       console.error(error);
 
-      res.status(500).send({ message: "There was a problem" });
+      res.status(500).send({ message: 'There was a problem' });
     }
   },
 
   async getEventUserComment(req, res) {
     try {
       let x = req.someValue;
-      if (typeof x === "string") {
-        x = x.replace(/[{()}]/g, "");
+      if (typeof x === 'string') {
+        x = x.replace(/[{()}]/g, '');
       }
 
       const { page = 1, limit = 10 } = req.query;
       const event = await Event.find()
-        .populate("userId", "username")
-        .populate("commentIds", "title body")
+        .populate('userId', 'username')
+        .populate('commentIds', 'title body')
         .limit(parseInt(limit))
         .skip((page - 1) * limit)
         .exec();
@@ -85,7 +87,7 @@ const EventController = {
         },
         { new: true }
       );
-      res.status(201).send({ msg: "Event created correctly", event });
+      res.status(201).send({ msg: 'Event created correctly', event });
     } catch (error) {
       console.error(error);
       next(error);
@@ -100,7 +102,7 @@ const EventController = {
         { new: true }
       );
 
-      res.send({ message: "Event successfully updated", event });
+      res.send({ message: 'Event successfully updated', event });
     } catch (error) {
       console.error(error);
     }
@@ -113,7 +115,7 @@ const EventController = {
       if (alreadyLiked) {
         return res
           .status(400)
-          .send({ message: "You have already liked this event" });
+          .send({ message: 'You have already liked this event' });
       } else {
         const event = await Event.findByIdAndUpdate(
           req.params._id,
@@ -127,7 +129,7 @@ const EventController = {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).send({ message: "There was a problem with your like" });
+      res.status(500).send({ message: 'There was a problem with your like' });
     }
   },
 
@@ -139,7 +141,7 @@ const EventController = {
       if (alreadyLiked === false) {
         return res
           .status(400)
-          .send({ message: "You have already disliked this event" });
+          .send({ message: 'You have already disliked this event' });
       }
 
       const event = await Event.findByIdAndUpdate(
@@ -152,19 +154,19 @@ const EventController = {
     } catch (error) {
       console.error(error);
 
-      res.status(500).send({ message: "There was a problem with your like" });
+      res.status(500).send({ message: 'There was a problem with your like' });
     }
   },
 
   async delete(req, res) {
     try {
-      const event= await Event.findByIdAndDelete(req.params._id);
-      res.send({ message: "Event deleted", event });
+      const event = await Event.findByIdAndDelete(req.params._id);
+      res.send({ message: 'Event deleted', event });
     } catch (error) {
       console.error(error);
       res
         .status(500)
-        .send({ message: "There was a problem trying to remove the event" });
+        .send({ message: 'There was a problem trying to remove the event' });
     }
   },
 };
