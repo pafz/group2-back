@@ -1,5 +1,5 @@
 const Event = require('../models/Event');
-const User = require('../models/User');
+const User = require('../routes/User');
 
 const EventController = {
   async getAll(req, res) {
@@ -75,19 +75,18 @@ const EventController = {
 
   async create(req, res, next) {
     try {
-      if (req.file) req.body.image = req.file.filename;
       const event = await Event.create({
         ...req.body,
         userId: req.user._id,
+        image: req.file?.filename,
       });
+
       await User.findByIdAndUpdate(
         req.user._id,
-        {
-          $push: { eventIds: event._id },
-        },
+        { $push: { eventIds: event._id } },
         { new: true }
       );
-      res.status(201).send({ msg: 'Event created correctly', event });
+      res.status(201).send({ msg: 'Post created correctly', post });
     } catch (error) {
       console.error(error);
       next(error);

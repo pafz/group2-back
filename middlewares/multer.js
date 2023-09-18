@@ -16,14 +16,14 @@ const generateUploadImageMulter = (path) =>
   });
   
 const uploadUserImages = generateUploadImageMulter(
-  "./assets/images/userImages"
+  "./assets/images/user"
 );
-const uploadCommentImages = generateUploadImageMulter(
-  "./assets/images/commentImages"
+const uploadReviewImages = generateUploadImageMulter(
+  "./assets/images/review"
 );
 
 const uploadEventImages = generateUploadImageMulter(
-  "./assets/images/eventImages"
+  "./assets/images/event"
 );
 
-module.exports = { uploadEventImages, uploadUserImages, uploadCommentImages };
+module.exports = { uploadEventImages, uploadUserImages, uploadReviewImages };
