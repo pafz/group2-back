@@ -1,4 +1,4 @@
-const User = require('../routes/User');
+const User = require('../models/User');
 const Event = require('../models/Event');
 require('dotenv').config();
 
