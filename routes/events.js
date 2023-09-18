@@ -8,7 +8,7 @@ const { uploadEventImages } = require("../middlewares/multer");
 router.get("/getall", EventController.getAll)
 router.get("/id/:_id", EventController.getById);
 router.get("/title/:title", EventController.getEventsByName);
-router.get("/", EventController.getEventUserComment);
+router.get("/", EventController.getEventUserReview);
 
 router.post("/create", authentication, isAdmin, uploadEventImages.single('image'), EventController.create);
 
