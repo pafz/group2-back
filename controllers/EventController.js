@@ -86,7 +86,7 @@ const EventController = {
         { $push: { eventIds: event._id } },
         { new: true }
       );
-      res.status(201).send({ msg: 'Post created correctly', post });
+      res.status(201).send({ message: 'Post created correctly', post });
     } catch (error) {
       console.error(error);
       next(error);

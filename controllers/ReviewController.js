@@ -26,7 +26,7 @@ const ReviewController = {
       await Post.findByIdAndUpdate(req.body.postId, {
         $push: { reviewIds: review._id },
       });
-      res.status(201).send({ msg: 'Review created correctly', review });
+      res.status(201).send({ message: 'Review created correctly', review });
     } catch (error) {
       console.error(error);
       next(error);

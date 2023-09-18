@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+//TODO: hash email, like password
 
 const UserController = {
   //   async userConfirm(req, res) {
@@ -52,6 +53,12 @@ const UserController = {
         return res.status(409).json({ message: 'El usuario ya existe' });
       }
 
+      if (password !== password2) {
+        return res
+          .status(409)
+          .json({ message: 'Las passwords no son iguales' });
+      }
+
       const hashedPassword = await bcrypt.hashSync(password, 10);
       const emailToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
         expiresIn: '48h',
@@ -70,7 +77,7 @@ const UserController = {
         surname2,
         email,
         password: hashedPassword,
-        password2,
+        password2: hashedPassword,
         occupation,
         role,
         tokens: [{ token: emailToken.toString() }],

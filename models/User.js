@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const ObjectId = mongoose.SchemaTypes.ObjectId;
+
 //TODO: required some fields -> basic nombre, apellido, correo, empresa/ estudiante
 
 const UserSchema = new mongoose.Schema(
@@ -29,11 +30,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Por favor reescribe tu contraseña'],
     },
+    eventIds: [{ type: ObjectId, ref: 'Event' }],
+    reviewIds: [{ type: ObjectId, ref: 'Review' }],
+    followers: [{ type: ObjectId, ref: 'User' }],
     occupation: {
       type: String,
       required: [true, 'Por favor rellena tu ocupación'],
     },
-    _idDoubt: { type: Schema.Types.ObjectId, ref: 'Doubt' },
     role: String,
     tokens: [],
     avatar: String,
