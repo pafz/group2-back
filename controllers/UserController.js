@@ -21,6 +21,7 @@ const UserController = {
   //         .json({ message: 'Hubo un error al confirmar al usuario' });
   //     }
   //   },
+
   async registerUser(req, res, next) {
     const {
       name,
@@ -111,9 +112,9 @@ const UserController = {
         return res.status(401).json({ message: 'Credenciales no válidas' });
       }
 
-      if (!user.confirmed) {
-        return res.status(400).send({ message: 'Debes confirmar tu email' });
-      }
+      //   if (!user.confirmed) {
+      //     return res.status(400).send({ message: 'Debes confirmar tu email' });
+      //   }
 
       const isMatch = bcrypt.compareSync(password, user.password);
 
