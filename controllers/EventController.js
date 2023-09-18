@@ -1,5 +1,5 @@
 const Event = require('../models/Event');
-const User = require('../routes/User');
+const User = require('../models/User');
 
 const EventController = {
   async getAll(req, res) {

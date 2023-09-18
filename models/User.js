@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema(
     // },
     password2: {
       type: String,
-      required: [true, 'Por favor confirma tu contraseña'],
+      required: [true, 'Por favor reescribe tu contraseña'],
     },
     occupation: {
       type: String,

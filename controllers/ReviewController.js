@@ -1,17 +1,16 @@
-const Review = require("../models/Review");
-const User = require("../routes/User");
-const Event = require("../models/Event");
+const Review = require('../models/Review');
+const User = require('../models/User');
+const Event = require('../models/Event');
 
 const ReviewController = {
-  
   async getById(req, res) {
     try {
       const review = await Review.findById(req.params._id);
-      
+
       if (!review) {
         return res.status(400).send({ message: "This review doesn't exist" });
       }
-      
+
       res.send(review);
     } catch (error) {
       console.error(error);
@@ -27,13 +26,13 @@ const ReviewController = {
       await Post.findByIdAndUpdate(req.body.postId, {
         $push: { reviewIds: review._id },
       });
-      res.status(201).send({ msg: "Review created correctly", review });
+      res.status(201).send({ msg: 'Review created correctly', review });
     } catch (error) {
       console.error(error);
       next(error);
     }
   },
-  
+
   async update(req, res) {
     try {
       const review = await Review.findByIdAndUpdate(
@@ -42,12 +41,12 @@ const ReviewController = {
         { new: true }
       );
 
-      res.send({ message: "Review successfully updated", review });
+      res.send({ message: 'Review successfully updated', review });
     } catch (error) {
       console.error(error);
     }
   },
-  
+
   async like(req, res) {
     try {
       const review = await Review.findById(req.params._id);
@@ -55,7 +54,7 @@ const ReviewController = {
       if (alreadyLiked) {
         return res
           .status(400)
-          .send({ message: "You have already liked this review" });
+          .send({ message: 'You have already liked this review' });
       } else {
         const review = await Review.findByIdAndUpdate(
           req.params._id,
@@ -70,7 +69,7 @@ const ReviewController = {
     } catch (error) {
       console.error(error);
 
-      res.status(500).send({ message: "There was a problem with your like" });
+      res.status(500).send({ message: 'There was a problem with your like' });
     }
   },
 
@@ -82,7 +81,7 @@ const ReviewController = {
       if (alreadyLiked === false) {
         return res
           .status(400)
-          .send({ message: "You have already disliked this review" });
+          .send({ message: 'You have already disliked this review' });
       }
 
       await Review.updateOne(
@@ -95,7 +94,7 @@ const ReviewController = {
     } catch (error) {
       console.error(error);
 
-      res.status(500).send({ message: "There was a problem with your like" });
+      res.status(500).send({ message: 'There was a problem with your like' });
     }
   },
 
@@ -103,12 +102,12 @@ const ReviewController = {
     try {
       const review = await Review.findByIdAndDelete(req.params._id);
 
-      res.send({ message: "Review deleted", review });
+      res.send({ message: 'Review deleted', review });
     } catch (error) {
       console.error(error);
       res
         .status(500)
-        .send({ message: "There was a problem trying to remove the review" });
+        .send({ message: 'There was a problem trying to remove the review' });
     }
   },
 };

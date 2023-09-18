@@ -21,20 +21,30 @@ const UserController = {
   //     }
   //   },
   async registerUser(req, res, next) {
-    const { name, email, password, password2, occupation } = req.body;
+    const {
+      name,
+      surname,
+      surname2,
+      email,
+      password,
+      password2,
+      occupation,
+      role,
+      avatar,
+    } = req.body;
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
-    const validateEmail = email => {
-      return emailRegex.test(email);
-    };
-    //FIXME: works??
-    console.log(validateEmail()); // true
+    // const validateEmail = email => {
+    //   return emailRegex.test(email);
+    // };
+    // //FIXME: works??
+    // console.log(validateEmail()); // true
 
-    if (email !== false) {
-      return res.status(400).json({
-        message: 'No válido. Por favor, proporciona un correo de válido',
-      });
-    }
+    // if (email !== false) {
+    //   return res.status(400).json({
+    //     message: 'No válido. Por favor, proporciona un correo de válido',
+    //   });
+    // }
 
     try {
       const existingUser = await User.findOne({ email });
@@ -47,21 +57,24 @@ const UserController = {
         expiresIn: '48h',
       });
       const url = `http://localhost:3000/users/confirm` + emailToken;
-      await transporter.sendMail({
-        to: req.body.email,
-        subject: 'Confirm Your Registration',
-        html: `<h3>Welcome, you're one step away from registering</h3>
-        <a href="${url}">Click to confirm your registration</a>`,
-      });
+      //   await transporter.sendMail({
+      //     to: req.body.email,
+      //     subject: 'Confirm Your Registration',
+      //     html: `<h3>Welcome, you're one step away from registering</h3>
+      //     <a href="${url}">Click to confirm your registration</a>`,
+      //   });
 
       const user = await User.create({
         name,
         surname,
+        surname2,
         email,
         password: hashedPassword,
+        password2,
         occupation,
         role,
         tokens: [{ token: emailToken.toString() }],
+        avatar: 'student',
       });
 
       //   await transporter.sendMail({
