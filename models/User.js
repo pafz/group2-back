@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
-
 //TODO: required some fields -> basic nombre, apellido, correo, empresa/ estudiante
 
 const UserSchema = new mongoose.Schema(
@@ -37,6 +36,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Por favor rellena tu ocupación'],
     },
+    eventIds: [{ type: ObjectId, ref: 'Event' }],
+    reciewIds: [{ type: ObjectId, ref: 'Review' }],
+    followers: [{ type: ObjectId, ref: 'User' }],
+
     role: String,
     tokens: [],
     avatar: String,

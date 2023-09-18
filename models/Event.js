@@ -5,38 +5,33 @@ const EventSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "El titulo es necesario"],
+      required: [true, "Title is required"],
     },
     body: {
       type: String,
-      required: [true, "Descripcion es necesaria"],
+      required: [true, "Body is required"],
     },
     price: {
       type: Number,
-      required: [true, "Precio requerido"],
+      required: [true, "Price is required"],
     },
     date: {
       type: Date,
-      required: [true, "Fecha requerida"],
+      required: [true, "Date is required"],
     },
     place: {
       type: String,
-      required: [true, "Lugar requerido"],
+      required: [true, "Place is required"],
     },
-    speaker: {
-      type: String,
-      required: [true, "Ponente requerido"],
+    capacity: {
+      type: Number,
+      required: [true, "Capacity is required"],
     },
-    categories: {
-      type: String,
-      required: [true, "Ponente requerido"],
-    },
-
     
     image:String,
     likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
-    commentIds: [{ type: ObjectId, ref: "Comment" }],
+    reviewIds: [{ type: ObjectId, ref: "Review" }],
   },
   { timestamps: true }
 );

@@ -23,7 +23,7 @@ const ReviewController = {
       req.body.userId = userConnected._id;
 
       const review = await Review.create(req.body);
-      await Post.findByIdAndUpdate(req.body.postId, {
+      await Event.findByIdAndUpdate(req.body.eventId, {
         $push: { reviewIds: review._id },
       });
       res.status(201).send({ message: 'Review created correctly', review });

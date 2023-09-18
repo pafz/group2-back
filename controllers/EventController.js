@@ -1,12 +1,13 @@
 const Event = require('../models/Event');
 const User = require('../models/User');
 
+
 const EventController = {
   async getAll(req, res) {
     try {
       const events = await Event.find()
         .populate('userId')
-        .populate('commentIds');
+        .populate('reviewIds');
 
       res.send(events);
     } catch (error) {
@@ -17,7 +18,7 @@ const EventController = {
 
   async getById(req, res) {
     try {
-      const event = await Event.findById(req.params._id).populate('commentIds');
+      const event = await Event.findById(req.params._id).populate('reviewIds');
 
       if (!event) {
         return res.status(400).send({ message: "This event doesn't exist" });
@@ -51,7 +52,7 @@ const EventController = {
     }
   },
 
-  async getEventUserComment(req, res) {
+  async getEventUserReview(req, res) {
     try {
       let x = req.someValue;
       if (typeof x === 'string') {
@@ -60,8 +61,8 @@ const EventController = {
 
       const { page = 1, limit = 10 } = req.query;
       const event = await Event.find()
-        .populate('userId', 'username')
-        .populate('commentIds', 'title body')
+        .populate('userId', 'name')
+        .populate('reviewIds', 'title body')
         .limit(parseInt(limit))
         .skip((page - 1) * limit)
         .exec();
@@ -86,7 +87,11 @@ const EventController = {
         { $push: { eventIds: event._id } },
         { new: true }
       );
+<<<<<<< HEAD
       res.status(201).send({ message: 'Post created correctly', post });
+=======
+      res.status(201).send({ msg: 'Event created correctly', event });
+>>>>>>> develop
     } catch (error) {
       console.error(error);
       next(error);
