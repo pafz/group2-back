@@ -1,5 +1,5 @@
 const Review = require("../models/Review");
-const User = require("../models/User");
+const User = require("../routes/User");
 const Event = require("../models/Event");
 
 const ReviewController = {
