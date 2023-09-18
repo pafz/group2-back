@@ -1,10 +1,12 @@
 const Event = require("../models/Event");
-const User = require("../models/user");
+const User = require("../models/User");
 
 const EventController = {
   async getAll(req, res) {
     try {
-      const events = await Event.find().populate("userId").populate("commentIds");
+      const events = await Event.find()
+        .populate("userId")
+        .populate("commentIds");
 
       res.send(events);
     } catch (error) {
@@ -15,7 +17,7 @@ const EventController = {
 
   async getById(req, res) {
     try {
-      const event = await Event.findById(req.params._id).populate("commentIds")
+      const event = await Event.findById(req.params._id).populate("commentIds");
 
       if (!event) {
         return res.status(400).send({ message: "This event doesn't exist" });
@@ -73,19 +75,18 @@ const EventController = {
 
   async create(req, res, next) {
     try {
-      if (req.file) req.body.image = req.file.filename;
       const event = await Event.create({
         ...req.body,
         userId: req.user._id,
+        image: req.file?.filename,
       });
+
       await User.findByIdAndUpdate(
         req.user._id,
-        {
-          $push: { eventIds: event._id },
-        },
+        { $push: { eventIds: event._id } },
         { new: true }
       );
-      res.status(201).send({ msg: "Event created correctly", event });
+      res.status(201).send({ msg: "Post created correctly", post });
     } catch (error) {
       console.error(error);
       next(error);
@@ -158,7 +159,7 @@ const EventController = {
 
   async delete(req, res) {
     try {
-      const event= await Event.findByIdAndDelete(req.params._id);
+      const event = await Event.findByIdAndDelete(req.params._id);
       res.send({ message: "Event deleted", event });
     } catch (error) {
       console.error(error);
