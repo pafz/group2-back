@@ -11,10 +11,10 @@ dbConnection();
 app.use(express.json());
 app.use(cors());
 
-// app.use('/uploads', express.static('uploads'));
+ app.use('/uploads', express.static('uploads'));
 // app.use('/users', require('./routes/users'));
 
-// app.use('/events', require('./routes/events'));
+ app.use('/events', require('./routes/events'));
 
 // app.use(handleTypeError);
 
