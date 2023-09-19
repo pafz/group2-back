@@ -32,7 +32,7 @@ const isAuthor = async (req, res, next) => {
     const event = await Event.findById(req.params._id);
 
     if (!event) {
-      return res.status(404).send({ message: 'Post not found' });
+      return res.status(404).send({ message: 'Event not found' });
     }
 
     if (event.userId.toString() !== req.user._id.toString()) {

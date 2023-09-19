@@ -37,7 +37,7 @@ const ReviewController = {
     try {
       const review = await Review.findByIdAndUpdate(
         req.params._id,
-        { ...req.body, image: req.file.filename },
+        { ...req.body, image: req.file?.filename },
         { new: true }
       );
 
