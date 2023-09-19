@@ -1,7 +1,6 @@
 const Event = require('../models/Event');
 const User = require('../models/User');
 
-
 const EventController = {
   async getAll(req, res) {
     try {
