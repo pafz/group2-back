@@ -26,7 +26,7 @@ const ReviewController = {
       await Event.findByIdAndUpdate(req.body.eventId, {
         $push: { reviewIds: review._id },
       });
-      res.status(201).send({ msg: 'Review created correctly', review });
+      res.status(201).send({ message: 'Review created correctly', review });
     } catch (error) {
       console.error(error);
       next(error);
@@ -37,7 +37,7 @@ const ReviewController = {
     try {
       const review = await Review.findByIdAndUpdate(
         req.params._id,
-        { ...req.body, image: req.file.filename },
+        { ...req.body, image: req.file?.filename },
         { new: true }
       );
 

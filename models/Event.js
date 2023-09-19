@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
+
+const validCategories = [
+  "Finanzas e inversión",
+  "Gestión empresarial",
+  "Habilidades directivas",
+  "Marketing",
+  "Tecnología",
+  "Emprendimiento",
+  "Sociedad",
+];
+
 const EventSchema = new mongoose.Schema(
   {
     title: {
@@ -27,8 +38,12 @@ const EventSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Capacity is required"],
     },
-    
-    image:String,
+    category: {
+      type: String,
+      required: [true, "Category is required"],
+      enum: validCategories, 
+    },
+    image: String,
     likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
     reviewIds: [{ type: ObjectId, ref: "Review" }],
@@ -37,13 +52,12 @@ const EventSchema = new mongoose.Schema(
 );
 
 EventSchema.methods.toJSON = function () {
-  const event = this._doc;  
-  delete eventatedAt;
-  delete eventatedAt;    
-  return event
-}
+  const event = this._doc;
+  delete event.createdAt;
+  delete event.updatedAt;
+  return event;
+};
 
 const Event = mongoose.model("Event", EventSchema);
 
-
-module.exports = Event
+module.exports = Event;
