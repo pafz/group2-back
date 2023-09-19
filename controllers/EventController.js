@@ -1,7 +1,6 @@
 const Event = require('../models/Event');
 const User = require('../models/User');
 
-
 const EventController = {
   async getAll(req, res) {
     try {
@@ -87,11 +86,7 @@ const EventController = {
         { $push: { eventIds: event._id } },
         { new: true }
       );
-<<<<<<< HEAD
-      res.status(201).send({ message: 'Post created correctly', post });
-=======
       res.status(201).send({ msg: 'Event created correctly', event });
->>>>>>> develop
     } catch (error) {
       console.error(error);
       next(error);

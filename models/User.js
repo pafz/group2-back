@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Por favor rellena tu ocupación'],
     },
     eventIds: [{ type: ObjectId, ref: 'Event' }],
-    reciewIds: [{ type: ObjectId, ref: 'Review' }],
+    reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
 
     role: String,
