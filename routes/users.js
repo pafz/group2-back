@@ -1,14 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/UserController');
-const { authentication } = require('../middlewares/authentication');
-//TODO: authentication -> in logoutUser
+const UserController = require('../controllers/userController');
+const {
+  authentication,
+  isAuthor,
+  isAuthorUser,
+} = require('../middlewares/authentication');
+const { uploadUserImages } = require('../middlewares/multer');
 
 // router.get('/recoverPassword/:email', UserController.recoverPassword);
 //router.post('/userConfirm/:emailToken', UserController.userConfirm);
-router.post('/registerUser', UserController.registerUser);
-router.post('/loginUser', UserController.loginUser);
-// router.put('/resetPassword/:recoverToken', UserController.resetPassword);
+
+router.post('/registeruser', UserController.registerUser);
+router.post('/loginuser', UserController.loginUser);
+router.put('/registeruser', UserController.registerUser);
+router.put(
+  '/update',
+  authentication,
+  isAuthorUser,
+  uploadUserImages.single('avatar'),
+  UserController.update
+);
+router.get(
+  '/getuserconnected',
+  authentication,
+  UserController.getUserConnected
+);
 router.delete('/logout', authentication, UserController.logoutUser);
 
 module.exports = router;

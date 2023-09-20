@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 //const transporter = require('../config/nodemailer');
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
-
+//TODO: para dabta -> endpoint devolver solo _id del user
 const UserController = {
   //   async userConfirm(req, res) {
   //     try {
@@ -194,6 +194,43 @@ const UserController = {
       res.status(500).send({
         message: 'Hubo un problema al desloguear',
       });
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          name: req.body.name,
+          surname: req.body.surname,
+          surname2: req.body.surname2,
+          email: req.body.email,
+          avatar: req.file?.filename,
+        },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(400).send({ message: "This user doesn't exist" });
+      }
+
+      res.send({ message: 'User successfully updated', user });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getUserConnected(req, res) {
+    try {
+      const getUser = await User.findById(req.user._id).populate('eventIds');
+
+      res.send({ message: 'User: ', getUser });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ message: 'There was a problem with server', error });
     }
   },
 };
