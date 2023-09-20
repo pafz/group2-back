@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const transporter = require('../config/nodemailer');
-const API_URL = 'http://localhost:3000';
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+/* const transporter = require('../config/nodemailer'); */ 
+const API_URL = "http://localhost:3000";
 //TODO: hash email, like password
 
 const UserController = {
@@ -53,23 +53,23 @@ const UserController = {
     try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(409).json({ message: 'El usuario ya existe' });
+        return res.status(409).json({ message: "El usuario ya existe" });
       }
 
       if (password !== password2) {
         return res
           .status(409)
-          .json({ message: 'Las passwords no son iguales' });
+          .json({ message: "Las passwords no son iguales" });
       }
 
       const hashedPassword = await bcrypt.hashSync(password, 10);
       const emailToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-        expiresIn: '48h',
+        expiresIn: "48h",
       });
       const url = `http://localhost:3000/users/confirm` + emailToken;
       await transporter.sendMail({
         to: req.body.email,
-        subject: 'Confirm Your Registration',
+        subject: "Confirm Your Registration",
         html: `<h3>Welcome, you're one step away from registering</h3>
           <a href="${url}">Click to confirm your registration</a>`,
       });
@@ -84,17 +84,17 @@ const UserController = {
         occupation,
         role,
         tokens: [{ token: emailToken.toString() }],
-        avatar: 'student',
+        avatar: "student",
       });
 
       await transporter.sendMail({
         to: email,
-        subject: 'Registro realizado con éxito',
+        subject: "Registro realizado con éxito",
         html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
                   <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
       });
       res.status(201).json({
-        message: 'Usuario registrado  exitosamente!',
+        message: "Usuario registrado  exitosamente!",
         user,
         token: emailToken,
       });
@@ -110,20 +110,20 @@ const UserController = {
         { email: req.params.email },
         process.env.JWT_SECRET,
         {
-          expiresIn: '48h',
+          expiresIn: "48h",
         }
       );
-      const url = API_URL + '/users/resetPassword/' + recoverToken;
+      const url = API_URL + "/users/resetPassword/" + recoverToken;
       await transporter.sendMail({
         to: req.params.email,
-        subject: 'Recover Password',
+        subject: "Recover Password",
         html: `<h3>Recover Password</h3>
           <a href="${url}">Recover Password</a>
           The link will expire in 48 hours
         `,
       });
       res.send({
-        message: 'A recovery email has been sent to your email address',
+        message: "A recovery email has been sent to your email address",
       });
     } catch (error) {
       console.error(error);
@@ -139,7 +139,7 @@ const UserController = {
         { email: payload.email },
         { password: req.body.password }
       );
-      res.send({ message: 'Password changed successfully' });
+      res.send({ message: "Password changed successfully" });
     } catch (error) {
       console.error(error);
     }
@@ -152,7 +152,7 @@ const UserController = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(401).json({ message: 'Credenciales no válidas' });
+        return res.status(401).json({ message: "Credenciales no válidas" });
       }
 
       // if (!user.confirmed) {
@@ -162,22 +162,22 @@ const UserController = {
       const isMatch = bcrypt.compareSync(password, user.password);
 
       if (!isMatch) {
-        return res.status(401).json({ message: 'Credenciales no válidas' });
+        return res.status(401).json({ message: "Credenciales no válidas" });
       }
 
       //FIXME: change expiresIn h, depends on the event? avoid to logout during an event
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '48h',
+        expiresIn: "48h",
       });
       if (user.tokens.length > 4) user.tokens.shift();
       user.tokens.push(token);
       await user.save();
 
-      res.status(200).json({ message: 'Bienvenidx ' + user.name, token });
+      res.status(200).json({ message: "Bienvenidx " + user.name, token });
       next();
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Error durante el login' });
+      res.status(500).json({ message: "Error durante el login" });
       next(error);
     }
   },
@@ -188,11 +188,11 @@ const UserController = {
       await User.findByIdAndUpdate(req.user._id, {
         $pull: { tokens: req.headers.authorization },
       });
-      res.send({ message: 'Loggout con éxito' });
+      res.send({ message: "Loggout con éxito" });
     } catch (error) {
       console.error(error);
       res.status(500).send({
-        message: 'Hubo un problema al desloguear',
+        message: "Hubo un problema al desloguear",
       });
     }
   },
