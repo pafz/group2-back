@@ -24,7 +24,11 @@ const UserController = {
   //     }
   //   },
 
+
+ // FIXME: register Patri-----------------------------------------------------------
+
   async registerUser(req, res, next) {
+
     const {
       name,
       surname,
@@ -34,7 +38,6 @@ const UserController = {
       password2,
       occupation,
       role,
-      avatar,
     } = req.body;
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
@@ -85,7 +88,7 @@ const UserController = {
         occupation,
         role,
        // tokens: [{ token: emailToken.toString() }],
-        avatar: 'student',
+       avatar: req.file?.filename,
       });
 
         //TODO: descomentar nodemailer 
@@ -105,6 +108,8 @@ const UserController = {
       next(error);
     }
   },
+
+
   //TODO: check of it works
   async recoverPassword(req, res) {
     try {
@@ -211,5 +216,25 @@ const UserController = {
         .send({ message: 'There was a problem with server', error });
     }
   }, 
+
+  async update(req, res) {
+    try {
+      const user = await User.findByIdAndUpdate(
+        req.user._id, 
+        { name:req.body.name,email:req.body.email, avatar: req.file?.filename },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(400).send({ message: "This user doesn't exist" });
+      }
+
+      res.send({ message: "User successfully updated", user });
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };
+
+
 module.exports = UserController;
