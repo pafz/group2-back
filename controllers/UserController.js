@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const transporter = require('../config/nodemailer');
+//const transporter = require('../config/nodemailer');
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 

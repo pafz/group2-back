@@ -51,10 +51,20 @@ const EventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+EventSchema.virtual("image_url").get(function () {
+  if (this.image) {
+    return `/assets/images/event/${this.image}`;
+  }
+  
+  return "/assets/images/event/default-event.jpg"; 
+});
+
 EventSchema.methods.toJSON = function () {
   const event = this._doc;
   delete event.createdAt;
-  delete event.updatedAt;
+  delete event.updatedAt;  
+
+  event.image_url = this.image_url;
   return event;
 };
 
