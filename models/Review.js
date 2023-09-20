@@ -1,11 +1,23 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
+const validPoints = [
+    1,
+    2,
+    3,
+    4,
+    5    
+  ];
+
+
 const ReviewSchema = new mongoose.Schema(
   {
     title: String,
     body: String,    
-    image:String,
+    points: {
+        type: String,        
+        enum: validPoints, 
+      },
 
     userId: { type: ObjectId, ref: "User" },
     eventId: { type: ObjectId, ref: "Event" },
@@ -13,6 +25,8 @@ const ReviewSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
 
 ReviewSchema.methods.toJSON = function () {
   const review = this._doc;  
