@@ -18,12 +18,10 @@ const generateUploadImageMulter = (path) =>
 const uploadUserImages = generateUploadImageMulter(
   "./assets/images/user"
 );
-const uploadReviewImages = generateUploadImageMulter(
-  "./assets/images/review"
-);
+
 
 const uploadEventImages = generateUploadImageMulter(
   "./assets/images/event"
 );
 
-module.exports = { uploadEventImages, uploadUserImages, uploadReviewImages };
+module.exports = { uploadEventImages, uploadUserImages };
