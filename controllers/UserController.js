@@ -198,5 +198,18 @@ const UserController = {
       });
     }
   },
+
+  async getUserConnected(req, res) {
+    try {
+      const getUser = await User.findById(req.user._id).populate('eventIds');
+
+      res.send({ message: 'User: ', getUser });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send({ message: 'There was a problem with server', error });
+    }
+  }, 
 };
 module.exports = UserController;
