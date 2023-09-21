@@ -1,38 +1,37 @@
 const User = require('../models/User');
-// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
-require('dotenv').config();
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jwt_secret = process.env.JWT_SECRET;
-
+// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 //TODO: para dabta -> endpoint devolver solo _id del user
 //TODO: regex password, mail,
+//TODO: userConfirm
 const UserController = {
-  // async userConfirm(req, res) {
-  //   try {
-  //     const token = req.query.emailToken;
-  //     const payload = jwt.verify(token, process.env.JWT_SECRET);
-  //     await User.findOneAndUpdate(
-  //       { email: payload.email },
-  //       { confirmed: true },
-  //       { new: true }
-  //     );
-  //     res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .json({ message: 'Hubo un error al confirmar al usuario' });
-  //   }
-  // },
+  //   async userConfirm(req, res) {
+  //     try {
+  //       const token = req.query.emailToken;
+  //       const payload = jwt.verify(token, process.env.JWT_SECRET);
+  //       await User.findOneAndUpdate(
+  //         { email: payload.email },
+  //         { confirmed: true },
+  //         { new: true }
+  //       );
+  //       res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
+  //     } catch (error) {
+  //       console.error(error);
+  //       res
+  //         .status(500)
+  //         .json({ message: 'Hubo un error al confirmar al usuario' });
+  //     }
+  //   },
+
+  // FIXME: register Patri-----------------------------------------------------------
 
   async registerUser(req, res, next) {
     const { name, surname, surname2, email, password, occupation, role } =
       req.body;
-    // const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
     // //FIXME: works??
     // const validateEmail = email => {
@@ -78,16 +77,16 @@ const UserController = {
       });
 
       //TODO: descomentar nodemailer
-      await transporter.sendMail({
-        to: email,
-        subject: 'Registro realizado con éxito',
-        html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
-                  <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
-      });
+      // await transporter.sendMail({
+      //   to: email,
+      //   subject: 'Registro realizado con éxito',
+      //   html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
+      //             <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
+      // });
       res.status(201).json({
         message: 'Usuario registrado  exitosamente!',
         user,
-        token: emailToken, //TODO: descomentar nodemailaer
+        //  token: emailToken,   //TODO: descomentar nodemailaer
       });
     } catch (error) {
       console.error(error);

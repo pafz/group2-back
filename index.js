@@ -3,7 +3,7 @@ require('dotenv').config();
 const { dbConnection } = require('./config/config');
 const app = express();
 const cors = require('cors');
-const path = require('path'); 
+const path = require('path');
 const { handleTypeError } = require('./middlewares/errors');
 const PORT = process.env.PORT || 3001;
 
@@ -13,7 +13,10 @@ app.use(express.json());
 app.use(cors());
 
 // Configurar middleware para servir archivos estáticos
-app.use('/assets/images', express.static(path.join(__dirname, 'assets/images')));
+app.use(
+  '/assets/images',
+  express.static(path.join(__dirname, 'assets/images'))
+);
 
 // Configurar las rutas estáticas para las imágenes
 app.use('/assets/images/user', express.static('/assets/images/user'));

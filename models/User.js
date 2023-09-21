@@ -16,8 +16,12 @@ const UserSchema = new mongoose.Schema(
     surname2: {
       type: String,
     },
-    
-    email: { type: String, required: [true, 'Por favor rellena tu email'] },
+
+    email: {
+      type: String,
+      match: [/.+\@.+\..+/, 'insert a valid email'],
+      required: [true, 'Por favor rellena tu email'],
+    },
     password: {
       type: String,
       required: [true, 'Por favor rellena tu contraseña'],
@@ -27,10 +31,6 @@ const UserSchema = new mongoose.Schema(
     //   type: Boolean,
     //   default: false,
     // },
-    password2: {
-      type: String,
-      required: [true, 'Por favor reescribe tu contraseña'],
-    },
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
@@ -61,7 +61,7 @@ UserSchema.virtual('avatar_url').get(function () {
 });
 
 UserSchema.methods.toJSON = function () {
-  console.log(this.avatar_url)
+  console.log(this.avatar_url);
   //const user = this.toObject();
   const user = this._doc;
   delete user.tokens;
@@ -80,5 +80,3 @@ UserSchema.methods.toJSON = function () {
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
-
-
