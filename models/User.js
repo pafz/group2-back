@@ -30,14 +30,8 @@ const UserSchema = new mongoose.Schema(
     password2: {
       type: String,
       required: [true, 'Por favor reescribe tu contraseña'],
-    },
-    eventIds: [{ type: ObjectId, ref: 'Event' }],
-    reviewIds: [{ type: ObjectId, ref: 'Review' }],
-    followers: [{ type: ObjectId, ref: 'User' }],
-    occupation: {
-      type: String,
-      required: [true, 'Por favor rellena tu ocupación'],
-    },
+    },    
+    
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
