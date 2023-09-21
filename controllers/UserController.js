@@ -30,8 +30,19 @@ const UserController = {
   // },
 
   async registerUser(req, res, next) {
-    const { name, surname, surname2, email, password, occupation, role } =
-      req.body;
+    const {
+      name,
+      surname,
+      email,
+      age,
+      tel,
+      ecosystem,
+      occupation,
+      password,
+      role,
+      acceptPolicity,
+      acceptCommunication,
+    } = req.body;
     // const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
     // //FIXME: works??
@@ -68,11 +79,9 @@ const UserController = {
       const user = await User.create({
         name,
         surname,
-        surname2,
         email,
         password: hashedPassword,
         occupation,
-        role,
         // tokens: [{ token: emailToken.toString() }],
         avatar: req.file?.filename,
       });
@@ -212,7 +221,6 @@ const UserController = {
         {
           name: req.body.name,
           surname: req.body.surname,
-          surname2: req.body.surname2,
           email: req.body.email,
           avatar: req.file?.filename,
         },

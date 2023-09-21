@@ -29,7 +29,7 @@ const UserController = {
   // FIXME: register Patri-----------------------------------------------------------
 
   async registerUser(req, res, next) {
-    const { name, surname, surname2, email, password, occupation, role } =
+    const { name, surname, email, age, tel, ecosystem, occupation, password } =
       req.body;
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
@@ -67,7 +67,6 @@ const UserController = {
       const user = await User.create({
         name,
         surname,
-        surname2,
         email,
         password: hashedPassword,
         occupation,
@@ -208,7 +207,6 @@ const UserController = {
         {
           name: req.body.name,
           surname: req.body.surname,
-          surname2: req.body.surname2,
           email: req.body.email,
           avatar: req.file?.filename,
         },

@@ -11,19 +11,23 @@ const UserSchema = new mongoose.Schema(
     },
     surname: {
       type: String,
-      required: [true, 'Por favor rellena tu primer apellido'],
+      required: [true, 'Por favor rellena tu/s apellido/s'],
     },
-    surname2: {
-      type: String,
+    age: {
+      type: integer,
+      required: [true, 'Por favor rellena tu edad'],
     },
-
     email: {
       type: String,
-      match: [/.+\@.+\..+/, 'insert a valid email'],
+      match: [/.+\@.+\..+/, 'Por favor inserta uno válido'],
       required: [true, 'Por favor rellena tu email'],
     },
     password: {
       type: String,
+      match: [
+        /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,30}$"/,
+        'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
+      ],
       required: [true, 'Por favor rellena tu contraseña'],
     },
     //FIXME: delete after test - email confirmed
@@ -41,7 +45,7 @@ const UserSchema = new mongoose.Schema(
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
-    orderIds: [{ type: ObjectId, ref: "Order" }],
+    orderIds: [{ type: ObjectId, ref: 'Order' }],
     wishList: [{ type: ObjectId, ref: 'Event' }],
 
     avatar: String,
