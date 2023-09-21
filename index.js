@@ -18,7 +18,7 @@ app.use('/assets/images', express.static(path.join(__dirname, 'assets/images')))
 // Configurar las rutas estáticas para las imágenes
 app.use('/assets/images/user', express.static('/assets/images/user'));
 app.use('/assets/images/event', express.static('/assets/images/event'));
-app.use('/assets/images/review', express.static('/assets/images/review'));
+// app.use('/assets/images/review', express.static('/assets/images/review'));
 
 app.get('/', (req, res) =>
   res
