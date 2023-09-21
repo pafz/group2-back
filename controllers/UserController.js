@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//const transporter = require('../config/nodemailer');
+// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 //TODO: para dabta -> endpoint devolver solo _id del user
@@ -24,7 +24,11 @@ const UserController = {
   //     }
   //   },
 
+
+ // FIXME: register Patri-----------------------------------------------------------
+
   async registerUser(req, res, next) {
+
     const {
       name,
       surname,
@@ -34,7 +38,6 @@ const UserController = {
       password2,
       occupation,
       role,
-      avatar,
     } = req.body;
     const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
@@ -63,16 +66,17 @@ const UserController = {
       }
 
       const hashedPassword = await bcrypt.hashSync(password, 10);
+      //TODO: descomenntar nodemailer 
       // const emailToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
       //   expiresIn: '48h',
-      //   });
-      //   const url = `http://localhost:3000/users/confirm` + emailToken;
-      //   await transporter.sendMail({
-      //     to: req.body.email,
-      //     subject: 'Confirm Your Registration',
-      //     html: `<h3>Welcome, you're one step away from registering</h3>
-      //       <a href="${url}">Click to confirm your registration</a>`,
-      //   });
+      // });
+      // const url = `http://localhost:3000/users/confirm` + emailToken;
+      // await transporter.sendMail({
+      //   to: req.body.email,
+      //   subject: 'Confirm Your Registration',
+      //   html: `<h3>Welcome, you're one step away from registering</h3>
+      //     <a href="${url}">Click to confirm your registration</a>`,
+      // });
 
       const user = await User.create({
         name,
@@ -83,26 +87,29 @@ const UserController = {
         password2: hashedPassword,
         occupation,
         role,
-        // tokens: [{ token: emailToken.toString() }],
-        avatar: 'student',
+       // tokens: [{ token: emailToken.toString() }],
+       avatar: req.file?.filename,
       });
 
-      //   await transporter.sendMail({
-      //     to: email,
-      //     subject: 'Registro realizado con éxito',
-      //     html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
-      //               <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
-      //   });
+        //TODO: descomentar nodemailer 
+      // await transporter.sendMail({
+      //   to: email,
+      //   subject: 'Registro realizado con éxito',
+      //   html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
+      //             <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
+      // });
       res.status(201).json({
         message: 'Usuario registrado  exitosamente!',
         user,
-        // token: emailToken,
+      //  token: emailToken,   //TODO: descomentar nodemailaer 
       });
     } catch (error) {
       console.error(error);
       next(error);
     }
   },
+
+
   //TODO: check of it works
   //   async recoverPassword(req, res) {
   //     try {
@@ -173,7 +180,7 @@ const UserController = {
       user.tokens.push(token);
       await user.save();
 
-      res.status(200).json({ message: 'Bienvenidx ' + user.name, token });
+      res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user });//TODO: añadido user para guardar todo el user en front
       next();
     } catch (error) {
       console.error(error);
@@ -197,30 +204,6 @@ const UserController = {
     }
   },
 
-  async update(req, res) {
-    try {
-      const user = await User.findByIdAndUpdate(
-        req.user._id,
-        {
-          name: req.body.name,
-          surname: req.body.surname,
-          surname2: req.body.surname2,
-          email: req.body.email,
-          avatar: req.file?.filename,
-        },
-        { new: true }
-      );
-
-      if (!user) {
-        return res.status(400).send({ message: "This user doesn't exist" });
-      }
-
-      res.send({ message: 'User successfully updated', user });
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
   async getUserConnected(req, res) {
     try {
       const getUser = await User.findById(req.user._id).populate('eventIds');
@@ -232,6 +215,26 @@ const UserController = {
         .status(500)
         .send({ message: 'There was a problem with server', error });
     }
+  }, 
+
+  async update(req, res) {
+    try {
+      const user = await User.findByIdAndUpdate(
+        req.user._id, 
+        { name:req.body.name,email:req.body.email, avatar: req.file?.filename },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(400).send({ message: "This user doesn't exist" });
+      }
+
+      res.send({ message: "User successfully updated", user });
+    } catch (error) {
+      console.error(error);
+    }
   },
 };
+
+
 module.exports = UserController;
