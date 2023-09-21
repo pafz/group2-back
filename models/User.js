@@ -41,6 +41,8 @@ const UserSchema = new mongoose.Schema(
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
+    orderIds: [{ type: ObjectId, ref: "Order" }],
+    wishList: [{ type: ObjectId, ref: 'Event' }],
 
     avatar: String,
     role: String,

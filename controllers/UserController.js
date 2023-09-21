@@ -191,14 +191,17 @@ const UserController = {
 
   async getUserConnected(req, res) {
     try {
-      const getUser = await User.findById(req.user._id).populate('eventIds');
-
-      res.send({ message: 'User: ', getUser });
+      const user = await User.findById(req.user._id)
+        .populate({
+          path: 'orderIds',
+          populate: {
+            path: 'eventsIds',
+          },
+        })
+        .populate('wishList');
+      res.send(user);
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send({ message: 'There was a problem with server', error });
     }
   },
 
@@ -221,6 +224,21 @@ const UserController = {
       }
 
       res.send({ message: 'User successfully updated', user });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  async getUserConnected(req, res) {
+    try {
+      const user = await User.findById(req.user._id)
+        .populate({
+          path: 'orderIds',
+          populate: {
+            path: 'eventsIds',
+          },
+        })
+        .populate('wishList');
+      res.send(user);
     } catch (error) {
       console.error(error);
     }

@@ -123,6 +123,12 @@ const EventController = {
 
           { new: true }
         );
+        await User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { wishList: req.params._id } },
+            { new: true }
+          );
+    
 
         res.send(event);
       }
