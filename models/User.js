@@ -35,6 +35,7 @@ const UserSchema = new mongoose.Schema(
     //   type: Boolean,
     //   default: false,
     // },
+<<<<<<< HEAD
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
@@ -42,6 +43,13 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Por favor rellena tu ocupación'],
     },
+=======
+    password2: {
+      type: String,
+      required: [true, 'Por favor reescribe tu contraseña'],
+    },    
+    
+>>>>>>> develop
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
