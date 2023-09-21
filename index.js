@@ -32,6 +32,7 @@ app.use('/users', require('./routes/users'));
 app.use('/events', require('./routes/events'));
 app.use('/reviews', require('./routes/reviews'));
 app.use('/questions', require('./routes/questions'));
+app.use('/orders', require('./routes/orders'));
 
 app.use(handleTypeError);
 
