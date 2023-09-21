@@ -9,7 +9,7 @@ const {
 const { uploadUserImages } = require('../middlewares/multer');
 
 // router.get('/recoverPassword/:email', UserController.recoverPassword);
-//router.post('/userConfirm/:emailToken', UserController.userConfirm);
+router.post('/userconfirm/:token', UserController.userConfirm);
 
 router.post('/registeruser', UserController.registerUser);
 router.post('/loginuser', UserController.loginUser);

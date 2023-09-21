@@ -5,25 +5,42 @@ const jwt = require('jsonwebtoken');
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 //TODO: para dabta -> endpoint devolver solo _id del user
+//TODO: regex password, mail,
 const UserController = {
-  //   async userConfirm(req, res) {
-  //     try {
-  //       const token = req.query.emailToken;
-  //       const payload = jwt.verify(token, process.env.JWT_SECRET);
-  //       await User.findOneAndUpdate(
-  //         { email: payload.email },
-  //         { confirmed: true },
-  //         { new: true }
-  //       );
-  //       res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
-  //     } catch (error) {
-  //       console.error(error);
-  //       res
-  //         .status(500)
-  //         .json({ message: 'Hubo un error al confirmar al usuario' });
-  //     }
-  //   },
-
+  // async userConfirm(req, res) {
+  //   try {
+  //     const token = req.query.emailToken;
+  //     const payload = jwt.verify(token, process.env.JWT_SECRET);
+  //     await User.findOneAndUpdate(
+  //       { email: payload.email },
+  //       { confirmed: true },
+  //       { new: true }
+  //     );
+  //     res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
+  //   } catch (error) {
+  //     console.error(error);
+  //     res
+  //       .status(500)
+  //       .json({ message: 'Hubo un error al confirmar al usuario' });
+  //   }
+  // },
+  async userConfirm(req, res) {
+    try {
+      const token = req.params.emailToken;
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+      await User.update(
+        { confirmed: true },
+        {
+          where: {
+            email: payload.email,
+          },
+        }
+      );
+      res.status(201).send('User successfully confirmed');
+    } catch (error) {
+      console.error(error);
+    }
+  },
   async registerUser(req, res, next) {
     const {
       name,
