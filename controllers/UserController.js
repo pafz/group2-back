@@ -181,7 +181,6 @@ const UserController = {
       await user.save();
 
       res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user }); //TODO: añadido user para guardar todo el user en front
-      next();
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error durante el login' });
