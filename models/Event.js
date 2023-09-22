@@ -56,7 +56,7 @@ EventSchema.virtual("image_url").get(function () {
     return `/assets/images/event/${this.image}`;
   }
   
-  return "/assets/images/event/default-event.jpg"; 
+  return "/assets/images/event/default-event.png"; 
 });
 
 EventSchema.methods.toJSON = function () {
