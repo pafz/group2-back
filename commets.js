@@ -1,49 +1,37 @@
 const User = require('../models/User');
-// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
-require('dotenv').config();
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jwt_secret = process.env.JWT_SECRET;
-
+// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 //TODO: para dabta -> endpoint devolver solo _id del user
 //TODO: regex password, mail,
+//TODO: userConfirm
 const UserController = {
-  // async userConfirm(req, res) {
-  //   try {
-  //     const token = req.query.emailToken;
-  //     const payload = jwt.verify(token, process.env.JWT_SECRET);
-  //     await User.findOneAndUpdate(
-  //       { email: payload.email },
-  //       { confirmed: true },
-  //       { new: true }
-  //     );
-  //     res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .json({ message: 'Hubo un error al confirmar al usuario' });
-  //   }
-  // },
+  //   async userConfirm(req, res) {
+  //     try {
+  //       const token = req.query.emailToken;
+  //       const payload = jwt.verify(token, process.env.JWT_SECRET);
+  //       await User.findOneAndUpdate(
+  //         { email: payload.email },
+  //         { confirmed: true },
+  //         { new: true }
+  //       );
+  //       res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
+  //     } catch (error) {
+  //       console.error(error);
+  //       res
+  //         .status(500)
+  //         .json({ message: 'Hubo un error al confirmar al usuario' });
+  //     }
+  //   },
+
+  // FIXME: register Patri-----------------------------------------------------------
 
   async registerUser(req, res, next) {
-    const {
-      name,
-      surname,
-      email,
-      bday,
-      tel,
-      ecosystem,
-      occupation,
-      password,
-      role,
-      acceptPolicity,
-      acceptCommunication,
-    } = req.body;
-    // const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const { name, surname, email, age, tel, ecosystem, occupation, password } =
+      req.body;
+    const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
     // //FIXME: works??
     // const validateEmail = email => {
@@ -80,14 +68,9 @@ const UserController = {
         name,
         surname,
         email,
-        bday,
-        tel,
-        ecosystem,
-        occupation,
         password: hashedPassword,
+        occupation,
         role,
-        acceptPolicity,
-        acceptCommunication,
         // tokens: [{ token: emailToken.toString() }],
         avatar: req.file?.filename,
       });
@@ -102,7 +85,7 @@ const UserController = {
       res.status(201).json({
         message: 'Usuario registrado  exitosamente!',
         user,
-        // token: emailToken, //TODO: descomentar nodemailaer
+        //  token: emailToken,   //TODO: descomentar nodemailaer
       });
     } catch (error) {
       console.error(error);
@@ -181,6 +164,7 @@ const UserController = {
       await user.save();
 
       res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user }); //TODO: añadido user para guardar todo el user en front
+      next();
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error durante el login' });
@@ -205,17 +189,14 @@ const UserController = {
 
   async getUserConnected(req, res) {
     try {
-      const user = await User.findById(req.user._id)
-        .populate({
-          path: 'orderIds',
-          populate: {
-            path: 'eventsIds',
-          },
-        })
-        .populate('wishList');
-      res.send(user);
+      const getUser = await User.findById(req.user._id).populate('eventIds');
+
+      res.send({ message: 'User: ', getUser });
     } catch (error) {
       console.error(error);
+      res
+        .status(500)
+        .send({ message: 'There was a problem with server', error });
     }
   },
 
@@ -241,21 +222,22 @@ const UserController = {
       console.error(error);
     }
   },
-  async getUserConnected(req, res) {
-    try {
-      const user = await User.findById(req.user._id)
-        .populate({
-          path: 'orderIds',
-          populate: {
-            path: 'eventsIds',
-          },
-        })
-        .populate('wishList');
-      res.send(user);
-    } catch (error) {
-      console.error(error);
-    }
-  },
 };
 
 module.exports = UserController;
+
+
+
+
+
+      name,
+      surname,
+      email,
+      bday,
+      tel,
+      ecosystem,
+      occupation,
+      password,
+      role,
+      acceptPolicity,
+      acceptCommunication,
