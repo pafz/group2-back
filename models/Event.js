@@ -43,6 +43,11 @@ const EventSchema = new mongoose.Schema(
       required: [true, "Category is required"],
       enum: validCategories, 
     },
+    time: {
+      type: String,
+      required: [true, "Time is required"],
+      
+    },    
     image: String,
     likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
