@@ -34,7 +34,7 @@ const UserController = {
       name,
       surname,
       email,
-      age,
+      bday,
       tel,
       ecosystem,
       occupation,
@@ -80,23 +80,29 @@ const UserController = {
         name,
         surname,
         email,
-        password: hashedPassword,
+        bday,
+        tel,
+        ecosystem,
         occupation,
+        password: hashedPassword,
+        role,
+        acceptPolicity,
+        acceptCommunication,
         // tokens: [{ token: emailToken.toString() }],
         avatar: req.file?.filename,
       });
 
       //TODO: descomentar nodemailer
-      await transporter.sendMail({
-        to: email,
-        subject: 'Registro realizado con éxito',
-        html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
-                  <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
-      });
+      // await transporter.sendMail({
+      //   to: email,
+      //   subject: 'Registro realizado con éxito',
+      //   html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
+      //             <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
+      // });
       res.status(201).json({
         message: 'Usuario registrado  exitosamente!',
         user,
-        token: emailToken, //TODO: descomentar nodemailaer
+        // token: emailToken, //TODO: descomentar nodemailaer
       });
     } catch (error) {
       console.error(error);

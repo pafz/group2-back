@@ -225,3 +225,19 @@ const UserController = {
 };
 
 module.exports = UserController;
+
+
+
+
+
+      name,
+      surname,
+      email,
+      bday,
+      tel,
+      ecosystem,
+      occupation,
+      password,
+      role,
+      acceptPolicity,
+      acceptCommunication,

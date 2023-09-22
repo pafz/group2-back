@@ -13,58 +13,73 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Por favor rellena tu/s apellido/s'],
     },
-    age: {
-      type: integer,
-      required: [true, 'Por favor rellena tu edad'],
-    },
     email: {
       type: String,
-      match: [/.+\@.+\..+/, 'Por favor inserta uno válido'],
+      match: [/.+\@.+\..+/, 'Por favor inserta un email válido'],
       required: [true, 'Por favor rellena tu email'],
+    },
+    //TODO: BSON Date data type mongo DB & https://stackoverflow.com/questions/22041785/find-whether-someone-got-a-birthday-in-the-next-30-days-with-mongo
+    bday: {
+      type: Date,
+      match: [/.+\@.+\..+/, 'Por favor inserta uno válido'],
+      required: [true, 'Por favor rellena tu edad'],
+    },
+    tel: {
+      type: String,
+      //FIXME: do match works properly
+      // match: [
+      //   /^\+?(6\d{2}|7[1-9]\d{1})\d{6}$/,
+      //   'Por favor insetar un teléfono español',
+      // ],
+      required: [true, 'Por favor rellena tu teléfono'],
+    },
+    ecosystem: {
+      type: Boolean,
+      required: [true, 'Por favor selecciona una opción'],
+    },
+    occupation: {
+      type: String,
+      required: [true, 'Por favor rellena tu ocupación'],
     },
     password: {
       type: String,
-      match: [
-        /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,30}$"/,
-        'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
-      ],
+      //FIXME: do match works properly
+      // match: [
+      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,30}$"/,
+      //   'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
+      // ],
       required: [true, 'Por favor rellena tu contraseña'],
+    },
+    role: {
+      type: String,
+      confirmed: Boolean,
+      tokens: [],
+    },
+    acceptPolicity: {
+      type: Boolean,
+      required: [true, 'Por favor acepta la política'],
+    },
+    acceptCommunication: {
+      type: Boolean,
     },
     //FIXME: delete after test - email confirmed
     // confirmed: {
     //   type: Boolean,
     //   default: false,
     // },
-<<<<<<< HEAD
-    eventIds: [{ type: ObjectId, ref: 'Event' }],
-    reviewIds: [{ type: ObjectId, ref: 'Review' }],
-    followers: [{ type: ObjectId, ref: 'User' }],
-    occupation: {
-      type: String,
-      required: [true, 'Por favor rellena tu ocupación'],
-    },
-=======
-    password2: {
-      type: String,
-      required: [true, 'Por favor reescribe tu contraseña'],
-    },    
-    
->>>>>>> develop
+    avatar: String,
+    role: String,
+    tokens: [],
+
     eventIds: [{ type: ObjectId, ref: 'Event' }],
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
     followers: [{ type: ObjectId, ref: 'User' }],
     orderIds: [{ type: ObjectId, ref: 'Order' }],
     wishList: [{ type: ObjectId, ref: 'Event' }],
-
-    avatar: String,
-    role: String,
-    confirmed: Boolean,
-    tokens: [],
   },
   { timestamps: true }
 );
 
-//TODO: yol info
 // Agregar una propiedad virtual para la URL del avatar
 UserSchema.virtual('avatar_url').get(function () {
   if (this.avatar) {
@@ -84,6 +99,7 @@ UserSchema.methods.toJSON = function () {
   delete user.updatedAt;
   //FIXME: delete user.confirmed;
   delete user.role;
+  delete user.acceptPolicity;
   delete user._v;
 
   // Agregar la URL del avatar
