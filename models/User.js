@@ -34,7 +34,7 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Por favor rellena tu teléfono'],
     },
     ecosystem: {
-      type: Boolean,
+      type: String,
       required: [true, 'Por favor selecciona una opción'],
     },
     occupation: {
