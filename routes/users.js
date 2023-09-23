@@ -7,8 +7,7 @@ const {
 } = require('../middlewares/authentication');
 const { uploadUserImages } = require('../middlewares/multer');
 
-// router.get("/recoverPassword/:email", UserController.recoverPassword);
-//router.post('/userConfirm/:emailToken', UserController.userConfirm);
+router.get('/confirm/:emailToken', UserController.userConfirm);
 router.get(
   '/getuserconnected',
   authentication,
@@ -21,7 +20,8 @@ router.post(
 );
 
 router.post('/loginuser', UserController.loginUser);
-// router.put("/resetPassword/:recoverToken", UserController.resetPassword);
+router.post('/recoverpassword', UserController.recoverPassword);
+router.put('/resetpassword', UserController.resetPassword);
 router.put(
   '/updateuser',
   authentication,
@@ -37,6 +37,10 @@ router.post(
 );
 
 router.post('/loginuser', UserController.loginUser);
+
+router.put('/followuser/:_id', authentication, UserController.followUser);
+router.put('/unfollowuser/:_id', authentication, UserController.unfollowUser);
+
 router.put(
   '/updateuser',
   authentication,

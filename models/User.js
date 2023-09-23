@@ -1,28 +1,38 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
-//TODO: required some fields -> basic nombre, apellido, correo, empresa/ estudiante
 // const Joi = require('joi');
 
 const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      match: [
+        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
+        'Por favor rellena un nombre válido',
+      ],
       required: [true, 'Por favor rellena tu nombre'],
     },
     surname: {
       type: String,
+      match: [
+        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
+        'Por favor apellido/s válido/s',
+      ],
       required: [true, 'Por favor rellena tu/s apellido/s'],
     },
     email: {
       type: String,
-      match: [/.+\@.+\..+/, 'Por favor inserta un email válido'],
+      match: [
+        /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
+        'Por favor inserta un email válido',
+      ],
       required: [true, 'Por favor rellena tu email'],
     },
     //TODO: BSON Date data type mongo DB & https://stackoverflow.com/questions/22041785/find-whether-someone-got-a-birthday-in-the-next-30-days-with-mongo
     bday: {
       type: Date,
-      match: [/.+\@.+\..+/, 'Por favor inserta uno válido'],
-      required: [true, 'Por favor rellena tu edad'],
+      match: [/.+\@.+\..+/, 'Por favor inserta una fecha válida'],
+      required: [true, 'Por favor rellena tu fecha de nacimiento'],
     },
     tel: {
       type: String,
@@ -39,13 +49,13 @@ const UserSchema = new mongoose.Schema(
     },
     occupation: {
       type: String,
-      required: [true, 'Por favor rellena tu ocupación'],
+      required: [true, 'Por favor selecciona tu ocupación'],
     },
     password: {
       type: String,
       //FIXME: do match works properly
       // match: [
-      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,30}$"/,
+      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$"/,
       //   'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
       // ],
       required: [true, 'Por favor rellena tu contraseña'],
@@ -62,11 +72,10 @@ const UserSchema = new mongoose.Schema(
     acceptCommunication: {
       type: Boolean,
     },
-    //FIXME: delete after test - email confirmed
-    // confirmed: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
     avatar: String,
     role: String,
     tokens: [],
