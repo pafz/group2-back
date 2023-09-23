@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const transporter = require('../config/nodemailer');
 require('dotenv').config();
+const { passwordStrength } = require('check-password-strength');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -60,7 +61,7 @@ const UserController = {
         return res.status(409).json({ message: 'El usuario ya existe' });
       }
 
-      const emailToken = jwt.sign({ mail: req.body.mail }, jwt_secret, {
+      const emailToken = jwt.sign({ mail: req.body.email }, jwt_secret, {
         expiresIn: '48h',
       });
       const hashedPassword = await bcrypt.hashSync(password, 10);
@@ -85,7 +86,7 @@ const UserController = {
 
       await transporter.sendMail({
         to: email,
-        subject: 'MdE Confirmaci&oacute;n de registro',
+        subject: 'MdE Confirmación de registro',
         html: `<h3>Bienvenido a Marina de Eventos</h3>
               <p>Para continuar por favor haz clic en este <a href="${url}">enlace</a></p>
               <p>Si no puedes ver el enlace correctamente copia y pegar esta url en el navegador:</p>
@@ -94,6 +95,68 @@ const UserController = {
       res.status(201).send({
         message: 'Usuario creado con exito, por favor comprueba tu email.',
         user,
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  },
+
+  async recoverPassword(req, res, next) {
+    const { email } = req.body;
+
+    try {
+      const existingUser = await User.findOne({ email });
+      if (!existingUser) {
+        return res
+          .status(202)
+          .json({ message: 'Por favor compruebe su correo' });
+      }
+
+      const token = jwt.sign({ recover: email }, jwt_secret, {
+        expiresIn: '48h',
+      });
+
+      await User.findOneAndUpdate({ email }, { tokens: [{ token }] });
+
+      const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
+      const url = `${BASE_URL}/passwordreset/${token}`;
+
+      await transporter.sendMail({
+        to: email,
+        subject: 'MdE recuperación de contraseña',
+        html: `<p>Para continuar por favor haz clic en este <a href="${url}">enlace</a></p>
+              <p>Si no puedes ver el enlace correctamente copia y pegar esta url en el navegador:</p>
+              ${url}`,
+      });
+      res.status(201).send({
+        message: 'Por favor compruebe su correo',
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  },
+
+  async resetPassword(req, res, next) {
+    const { password, token } = req.body;
+    console.log(password, token);
+    try {
+      const existingUser = await User.findOne({ 'tokens.token': token });
+      console.log(existingUser);
+      if (!existingUser) {
+        return res
+          .status(401)
+          .json({ message: 'El token no es válido o ha expirado' });
+      }
+
+      const hashedPassword = await bcrypt.hashSync(password, 10);
+      const updatedUser = await User.findOneAndUpdate(
+        { 'tokens.token': token },
+        { password: hashedPassword }
+      );
+      res.status(200).send({
+        message: 'Password actualizado con exito',
       });
     } catch (error) {
       console.error(error);
@@ -111,9 +174,9 @@ const UserController = {
         return res.status(401).json({ message: 'Credenciales no válidas' });
       }
 
-      // if (!user.confirmed) {
-      //   return res.status(400).send({ message: 'Debes confirmar tu email' });
-      // }
+      if (!user.confirmed) {
+        return res.status(400).send({ message: 'Debes confirmar tu email' });
+      }
 
       const isMatch = bcrypt.compareSync(password, user.password);
 
