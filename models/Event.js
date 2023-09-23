@@ -12,6 +12,14 @@ const validCategories = [
   "Sociedad",
 ];
 
+const organization = [
+  "Edem",
+  "Lanzadera",
+  "MDE",
+  "Otro"
+  
+];
+
 const EventSchema = new mongoose.Schema(
   {
     title: {
@@ -42,6 +50,11 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: [true, "Category is required"],
       enum: validCategories, 
+    },
+    organization: {
+      type: String,
+      required: [true, "Organization is required"],
+      enum: organization, 
     },
     time: {
       type: String,
