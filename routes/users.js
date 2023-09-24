@@ -41,14 +41,6 @@ router.post('/loginuser', UserController.loginUser);
 router.put('/followuser/:_id', authentication, UserController.followUser);
 router.put('/unfollowuser/:_id', authentication, UserController.unfollowUser);
 
-router.put(
-  '/updateuser',
-  authentication,
-  isAuthorUser,
-  uploadUserImages.single('avatar'),
-  UserController.update
-);
-
 router.delete('/logout', authentication, UserController.logoutUser);
 
 module.exports = router;

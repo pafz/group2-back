@@ -14,11 +14,20 @@ const UserController = {
   async userConfirm(req, res) {
     try {
       const token = req.params.emailToken;
-      await User.findOneAndUpdate(
+      const user = await User.findOne({ 'tokens.token': token });
+      const validToken = jwt.verify(token, jwt_secret);
+      if (!user || !validToken) {
+        return res
+          .status(401)
+          .json({ message: 'El token no es válido o ha expirado' });
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
         { 'tokens.token': token },
-        { confirmed: true },
+        { confirmed: true, tokens: [] },
         { new: true }
       );
+
       res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
     } catch (error) {
       console.error(error);
@@ -108,7 +117,7 @@ const UserController = {
       const existingUser = await User.findOne({ email });
       if (!existingUser) {
         return res
-          .status(202)
+          .status(201)
           .json({ message: 'Por favor compruebe su correo' });
       }
 
@@ -139,20 +148,19 @@ const UserController = {
 
   async resetPassword(req, res, next) {
     const { password, token } = req.body;
-    console.log(password, token);
     try {
       const existingUser = await User.findOne({ 'tokens.token': token });
-      console.log(existingUser);
-      if (!existingUser) {
+      const validToken = jwt.verify(token, jwt_secret);
+      if (!existingUser || !validToken) {
         return res
           .status(401)
           .json({ message: 'El token no es válido o ha expirado' });
       }
 
       const hashedPassword = await bcrypt.hashSync(password, 10);
-      const updatedUser = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { 'tokens.token': token },
-        { password: hashedPassword }
+        { password: hashedPassword, tokens: [] }
       );
       res.status(200).send({
         message: 'Password actualizado con exito',
@@ -242,14 +250,14 @@ const UserController = {
 
       if (alreadyFollow) {
         return res.status(400).send({ message: 'Ya sigues a este usuario' });
-      } else {
-        const user = await User.findByIdAndUpdate(
-          req.params._id,
-          { $push: { followers: req.user._id } },
-          { new: true }
-        );
-        res.send(user);
       }
+
+      await User.findByIdAndUpdate(
+        req.params._id,
+        { $push: { followers: req.user._id } },
+        { new: true }
+      );
+      res.send({ message: 'Siguiendo al usuario con exito' });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: 'Ha habido un problema con tu follow' });
@@ -291,7 +299,6 @@ const UserController = {
         {
           name: req.body.name,
           surname: req.body.surname,
-          email: req.body.email,
           avatar: req.file?.filename,
         },
         { new: true }

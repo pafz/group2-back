@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",    
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "test": "NODE_ENV=testing jest --runInBand",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=develop nodemon index.js"
   },
   "keywords": [],
   "author": "",

@@ -55,13 +55,11 @@ const isAuthor = async (req, res, next) => {
 const isAuthorUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    console.log(user)
-    console.log(user._id)
 
     if (user._id.toString() !== req.user._id.toString()) {
       return reserr
         .status(403)
-        .send({ message: "You cannot edit elements that are not yours" });
+        .send({ message: 'You cannot edit elements that are not yours' });
     }
 
     next();
@@ -70,7 +68,7 @@ const isAuthorUser = async (req, res, next) => {
 
     return res.status(500).send({
       error,
-      message: "There was a problem with the author check",
+      message: 'There was a problem with the author check',
     });
   }
 };

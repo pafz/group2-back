@@ -1,5 +1,5 @@
 const express = require('express');
-require('dotenv').config();
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const { dbConnection } = require('./config/config');
 const app = express();
 const cors = require('cors');
@@ -39,6 +39,10 @@ app.use('/orders', require('./routes/orders'));
 
 app.use(handleTypeError);
 
-app.listen(PORT, () => console.log(`Servidor levantado en el puerto ${PORT}`));
+const server = app.listen(PORT, () =>
+  console.log(`Servidor levantado en el puerto ${PORT}`)
+);
+
+app.server = server;
 
 module.exports = app;

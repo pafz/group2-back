@@ -99,7 +99,6 @@ UserSchema.virtual('avatar_url').get(function () {
 });
 
 UserSchema.methods.toJSON = function () {
-  console.log(this.avatar_url);
   //const user = this.toObject();
   const user = this._doc;
   delete user.tokens;
