@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const transporter = require('../config/nodemailer');
 require('dotenv').config();
-const { passwordStrength } = require('check-password-strength');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
