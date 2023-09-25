@@ -2,6 +2,22 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 // const Joi = require('joi');
 
+const validEcosystemYes = [
+  'Empleado de EDEM',
+  'Estudiante',
+  'Empleado Lanzadera',
+  'Inversor de Angels',
+];
+
+const validEcosystemNo = [
+  'Propietari@ / dirección general',
+  'Director/a de departamento',
+  'Profesional senior',
+  'Profesional junior',
+  'Desemplead@',
+  'Estudiante',
+];
+
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -46,6 +62,17 @@ const UserSchema = new mongoose.Schema(
     ecosystem: {
       type: String,
       required: [true, 'Por favor selecciona una opción'],
+    },
+    //FIXME: depends on the previous option, are required!!
+    ecosystemYes: {
+      type: String,
+      required: [true, 'Situación actual es requerida'],
+      enum: validEcosystemYes,
+    },
+    ecosystemNo: {
+      type: String,
+      required: [true, 'Situación actual es requerida'],
+      enum: validEcosystemNo,
     },
     occupation: {
       type: String,
