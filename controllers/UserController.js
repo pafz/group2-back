@@ -85,6 +85,7 @@ const UserController = {
         role,
         acceptPolicity,
         acceptCommunication,
+        interested: [],
         tokens: [{ token: emailToken.toString() }],
         avatar: req.file?.filename,
       });
