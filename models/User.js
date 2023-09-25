@@ -64,19 +64,15 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Por favor selecciona una opción'],
     },
     //FIXME: depends on the previous option, are required!!
-    ecosystemYes: {
-      type: String,
-      required: [true, 'Situación actual es requerida'],
-      enum: validEcosystemYes,
-    },
+    // ecosystemYes: {
+    //   type: String,
+    //   required: [true, 'Situación actual es requerida'],
+    //   enum: validEcosystemYes,
+    // },
     ecosystemNo: {
       type: String,
       required: [true, 'Situación actual es requerida'],
       enum: validEcosystemNo,
-    },
-    occupation: {
-      type: String,
-      required: [true, 'Por favor selecciona tu ocupación'],
     },
     password: {
       type: String,
@@ -105,6 +101,7 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: String,
     role: String,
+    interested: [],
     tokens: [],
 
     eventIds: [{ type: ObjectId, ref: 'Event' }],
