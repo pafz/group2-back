@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 // const Joi = require('joi');
-///////////////////////FIXME: números, no?
+
 const levels = ['1', '2'];
-//const levelsEligibleForOffice = ['senior', 'c-level'];
-//////////////////////
 
 const occupations = [
   'Empleado de EDEM',
@@ -59,16 +57,11 @@ const UserSchema = new mongoose.Schema(
       // ],
       required: [true, 'Por favor rellena tu teléfono'],
     },
-    //////////////////////////
-    // level: { type: String, enum: levels, required: true },
-    // officePhoneNo: { type: String, required: isEligibleForOffice },
-    /////////////////////////
     ecosystem: {
       type: String,
       enum: levels,
       required: [true, 'Por favor selecciona una opción'],
     },
-    //FIXME: depends on the previous option, are required!!
     occupation: {
       type: String,
       enum: occupations,
@@ -113,13 +106,11 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Agregar una propiedad virtual para la URL del avatar
 UserSchema.virtual('avatar_url').get(function () {
   if (this.avatar) {
     return `/assets/images/user/${this.avatar}`;
   }
-  // Si no hay avatar, puedes proporcionar una URL predeterminada o manejarlo de la manera que prefieras
-  return '/assets/images/user/avatar-default.png'; // Cambia la ruta según tu estructura de carpetas
+  return '/assets/images/user/avatar-default.png';
 });
 
 UserSchema.methods.toJSON = function () {
@@ -134,24 +125,9 @@ UserSchema.methods.toJSON = function () {
   delete user.acceptPolicity;
   delete user._v;
 
-  // Agregar la URL del avatar
   user.avatar_url = this.avatar_url;
   return user;
 };
-function isValidEcosystemYes() {
-  if (validEcosystemYes.indexOf(this.level) > -1) {
-    //"this" contains the employee document at the time of required validation
-    return true;
-  }
-  return false;
-}
-function isValidEcosystemNo() {
-  if (validEcosystemNo.indexOf(this.level) > -1) {
-    //"this" contains the employee document at the time of required validation
-    return true;
-  }
-  return false;
-}
 
 const User = mongoose.model('User', UserSchema);
 
