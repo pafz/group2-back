@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+//delete isValidPassword??:
+const { isValidPassword } = require('mongoose-custom-validators');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 // const Joi = require('joi');
 
@@ -6,13 +8,14 @@ const levels = ['1', '2'];
 
 const occupations = [
   'Empleado de EDEM',
-  'Empleado Lanzadera',
-  'Inversor de Angels',
-  'Propietari@ / dirección general',
+  'Estudiante de EDEM',
+  'Empleado de LANZADERA',
+  'Inversor Angels',
+  'Propietario/a o dirección general',
   'Director/a de departamento',
   'Profesional senior',
   'Profesional junior',
-  'Desemplead@',
+  'Desempleado/a',
   'Estudiante',
 ];
 
@@ -36,25 +39,18 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      match: [
-        /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
-        'Por favor inserta un email válido',
-      ],
+      match: [/.+\@.+\..+/, 'Por favor inserta un email válido'],
       required: [true, 'Por favor rellena tu email'],
     },
     //TODO: BSON Date data type mongo DB & https://stackoverflow.com/questions/22041785/find-whether-someone-got-a-birthday-in-the-next-30-days-with-mongo
+    //FIXME: necessary to validate? A limit of age old?
     bday: {
       type: Date,
-      match: [/.+\@.+\..+/, 'Por favor inserta una fecha válida'],
       required: [true, 'Por favor rellena tu fecha de nacimiento'],
     },
+    //FIXME: validates with the API?
     tel: {
       type: String,
-      //FIXME: do match works properly
-      // match: [
-      //   /^\+?(6\d{2}|7[1-9]\d{1})\d{6}$/,
-      //   'Por favor insetar un teléfono español',
-      // ],
       required: [true, 'Por favor rellena tu teléfono'],
     },
     ecosystem: {
@@ -67,14 +63,22 @@ const UserSchema = new mongoose.Schema(
       enum: occupations,
       required: [true, 'Por favor selecciona una opción Yes'],
     },
+    //https://www.npmjs.com/package/mongoose-custom-validators
     password: {
       type: String,
+      validate: {
+        validator: isValidPassword,
+        message: 'mín: 8caracteres 1mayús 1minús 1número 1carácter especial',
+      },
       //FIXME: do match works properly
       // match: [
-      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$"/,
-      //   'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
+
+      //   // /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"/,
+      //   // /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9!@#$%^&*]){8,30}$/
+      //   'mín: 8caracteres 1mayús 1minús 1número 1carácter especial,',
       // ],
-      required: [true, 'Por favor rellena tu contraseña'],
+      // required: [true, 'Por favor rellena tu contraseña'],
     },
     role: {
       type: String,
