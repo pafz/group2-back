@@ -2,8 +2,7 @@ const request = require('supertest');
 const app = require('../index');
 const Event = require('../models/Event');
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
+const { addUser, deleteAllusers } = require('./helper');
 
 describe('events', () => {
   const event = {
@@ -18,25 +17,11 @@ describe('events', () => {
     place: 'here',
   };
 
-  const hashedPassword = bcrypt.hashSync('test1234', 10);
-  beforeAll(() =>
-    User.create({
-      email: 'testing2@test.com',
-      password: hashedPassword,
-      confirmed: true,
-      acceptPolicity: true,
-      occupation: 'Tester',
-      ecosystem: 'Tester',
-      name: 'Tester',
-      surname: 'Tester',
-      tel: 'Tester',
-      bday: 0,
-    })
-  );
+  beforeAll(() => addUser('testing2@test.com', 'test1234'));
 
   afterAll(async () => {
     await Event.deleteMany({});
-    await User.deleteMany({});
+    await deleteAllusers();
     await app.server.close();
     await mongoose.disconnect();
   });

@@ -1,9 +1,9 @@
 const request = require('supertest');
-const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+
 const app = require('../index');
 const Review = require('../models/Review');
-const User = require('../models/User');
-const mongoose = require('mongoose');
+const { addUser, deleteAllusers } = require('./helper');
 
 describe('reviews', () => {
   const review = {
@@ -11,25 +11,11 @@ describe('reviews', () => {
     body: 'this is a test',
   };
 
-  const hashedPassword = bcrypt.hashSync('test1234', 10);
-  beforeAll(() =>
-    User.create({
-      email: 'testing2@test.com',
-      password: hashedPassword,
-      confirmed: true,
-      acceptPolicity: true,
-      occupation: 'Tester',
-      ecosystem: 'Tester',
-      name: 'Tester',
-      surname: 'Tester',
-      tel: 'Tester',
-      bday: 0,
-    })
-  );
+  beforeAll(() => addUser('testing2@test.com', 'test1234'));
 
   afterAll(async () => {
     await Review.deleteMany({});
-    await User.deleteMany({});
+    await deleteAllusers();
     await app.server.close();
     await mongoose.disconnect();
   });
