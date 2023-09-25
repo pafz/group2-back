@@ -2,6 +2,20 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 // const Joi = require('joi');
 
+const levels = ['1', '2'];
+
+const occupations = [
+  'Empleado de EDEM',
+  'Empleado Lanzadera',
+  'Inversor de Angels',
+  'Propietari@ / dirección general',
+  'Director/a de departamento',
+  'Profesional senior',
+  'Profesional junior',
+  'Desemplead@',
+  'Estudiante',
+];
+
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -45,11 +59,13 @@ const UserSchema = new mongoose.Schema(
     },
     ecosystem: {
       type: String,
+      enum: levels,
       required: [true, 'Por favor selecciona una opción'],
     },
     occupation: {
       type: String,
-      required: [true, 'Por favor selecciona tu ocupación'],
+      enum: occupations,
+      required: [true, 'Por favor selecciona una opción Yes'],
     },
     password: {
       type: String,
@@ -78,6 +94,7 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: String,
     role: String,
+    interested: [],
     tokens: [],
 
     eventIds: [{ type: ObjectId, ref: 'Event' }],
@@ -89,13 +106,11 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Agregar una propiedad virtual para la URL del avatar
 UserSchema.virtual('avatar_url').get(function () {
   if (this.avatar) {
     return `/assets/images/user/${this.avatar}`;
   }
-  // Si no hay avatar, puedes proporcionar una URL predeterminada o manejarlo de la manera que prefieras
-  return '/assets/images/user/avatar-default.png'; // Cambia la ruta según tu estructura de carpetas
+  return '/assets/images/user/avatar-default.png';
 });
 
 UserSchema.methods.toJSON = function () {
@@ -110,7 +125,6 @@ UserSchema.methods.toJSON = function () {
   delete user.acceptPolicity;
   delete user._v;
 
-  // Agregar la URL del avatar
   user.avatar_url = this.avatar_url;
   return user;
 };
