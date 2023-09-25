@@ -14,16 +14,16 @@ dbConnection();
 app.use(express.json());
 app.use(cors());
 
-// Configurar middleware para servir archivos estáticos
+
 app.use(
   '/assets/images',
   express.static(path.join(__dirname, 'assets/images'))
 );
 
-// Configurar las rutas estáticas para las imágenes
+
 app.use('/assets/images/user', express.static('/assets/images/user'));
 app.use('/assets/images/event', express.static('/assets/images/event'));
-// app.use('/assets/images/review', express.static('/assets/images/review'));
+
 
 app.post("/authenticate", async (req, res) => {
     const { username } = req.body;
