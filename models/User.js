@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 // const Joi = require('joi');
+///////////////////////FIXME: números, no?
+const levels = ['1', '2'];
+//const levelsEligibleForOffice = ['senior', 'c-level'];
+//////////////////////
 
-const validEcosystemYes = [
+const occupations = [
   'Empleado de EDEM',
-  'Estudiante',
   'Empleado Lanzadera',
   'Inversor de Angels',
-];
-
-const validEcosystemNo = [
   'Propietari@ / dirección general',
   'Director/a de departamento',
   'Profesional senior',
@@ -59,20 +59,20 @@ const UserSchema = new mongoose.Schema(
       // ],
       required: [true, 'Por favor rellena tu teléfono'],
     },
+    //////////////////////////
+    // level: { type: String, enum: levels, required: true },
+    // officePhoneNo: { type: String, required: isEligibleForOffice },
+    /////////////////////////
     ecosystem: {
       type: String,
+      enum: levels,
       required: [true, 'Por favor selecciona una opción'],
     },
     //FIXME: depends on the previous option, are required!!
-    // ecosystemYes: {
-    //   type: String,
-    //   required: [true, 'Situación actual es requerida'],
-    //   enum: validEcosystemYes,
-    // },
-    ecosystemNo: {
+    occupation: {
       type: String,
-      required: [true, 'Situación actual es requerida'],
-      enum: validEcosystemNo,
+      enum: occupations,
+      required: [true, 'Por favor selecciona una opción Yes'],
     },
     password: {
       type: String,
@@ -138,6 +138,20 @@ UserSchema.methods.toJSON = function () {
   user.avatar_url = this.avatar_url;
   return user;
 };
+function isValidEcosystemYes() {
+  if (validEcosystemYes.indexOf(this.level) > -1) {
+    //"this" contains the employee document at the time of required validation
+    return true;
+  }
+  return false;
+}
+function isValidEcosystemNo() {
+  if (validEcosystemNo.indexOf(this.level) > -1) {
+    //"this" contains the employee document at the time of required validation
+    return true;
+  }
+  return false;
+}
 
 const User = mongoose.model('User', UserSchema);
 
