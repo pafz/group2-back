@@ -51,6 +51,32 @@ const EventController = {
     }
   },
 
+  async searchEvents(req, res) {
+    try {
+      if (req.query.title.length > 20) {
+        return res.status(400).send('To long search');
+      }
+
+      const title = new RegExp(req.query.title || '.*', 'i');
+      const query = { title };
+      if (req.query.categories) {
+        query.category = { $in: req.query.categories.split(',') };
+      }
+
+      const events = await Event.find(query);
+
+      if (!events) {
+        return res.status(400).send({ message: "This event doesn't exist" });
+      }
+
+      res.send(events);
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).send({ message: 'There was a problem' });
+    }
+  },
+
   async getEventUserReview(req, res) {
     try {
       let x = req.someValue;
@@ -124,11 +150,10 @@ const EventController = {
           { new: true }
         );
         await User.findByIdAndUpdate(
-            req.user._id,
-            { $push: { wishList: req.params._id } },
-            { new: true }
-          );
-    
+          req.user._id,
+          { $push: { wishList: req.params._id } },
+          { new: true }
+        );
 
         res.send(event);
       }
