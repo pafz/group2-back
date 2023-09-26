@@ -1,16 +1,40 @@
 const mongoose = require('mongoose');
+//delete isValidPassword??:
+const { isValidPassword } = require('mongoose-custom-validators');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
-//TODO: required some fields -> basic nombre, apellido, correo, empresa/ estudiante
 // const Joi = require('joi');
+
+const levels = ['1', '2'];
+
+const occupations = [
+  'Empleado de EDEM',
+  'Estudiante de EDEM',
+  'Empleado de LANZADERA',
+  'Inversor Angels',
+  'Propietario/a o dirección general',
+  'Director/a de departamento',
+  'Profesional senior',
+  'Profesional junior',
+  'Desempleado/a',
+  'Estudiante',
+];
 
 const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      match: [
+        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
+        'Por favor rellena un nombre válido',
+      ],
       required: [true, 'Por favor rellena tu nombre'],
     },
     surname: {
       type: String,
+      match: [
+        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
+        'Por favor apellido/s válido/s',
+      ],
       required: [true, 'Por favor rellena tu/s apellido/s'],
     },
     email: {
@@ -19,36 +43,42 @@ const UserSchema = new mongoose.Schema(
       required: [true, 'Por favor rellena tu email'],
     },
     //TODO: BSON Date data type mongo DB & https://stackoverflow.com/questions/22041785/find-whether-someone-got-a-birthday-in-the-next-30-days-with-mongo
+    //FIXME: necessary to validate? A limit of age old?
     bday: {
       type: Date,
-      match: [/.+\@.+\..+/, 'Por favor inserta uno válido'],
-      required: [true, 'Por favor rellena tu edad'],
+      required: [true, 'Por favor rellena tu fecha de nacimiento'],
     },
+    //FIXME: validates with the API?
     tel: {
       type: String,
-      //FIXME: do match works properly
-      // match: [
-      //   /^\+?(6\d{2}|7[1-9]\d{1})\d{6}$/,
-      //   'Por favor insetar un teléfono español',
-      // ],
       required: [true, 'Por favor rellena tu teléfono'],
     },
     ecosystem: {
-      type: Boolean,
+      type: String,
+      enum: levels,
       required: [true, 'Por favor selecciona una opción'],
     },
     occupation: {
       type: String,
-      required: [true, 'Por favor rellena tu ocupación'],
+      enum: occupations,
+      required: [true, 'Por favor selecciona una opción Yes'],
     },
+    //https://www.npmjs.com/package/mongoose-custom-validators
     password: {
       type: String,
+      validate: {
+        validator: isValidPassword,
+        message: 'mín: 8caracteres 1mayús 1minús 1número 1carácter especial',
+      },
       //FIXME: do match works properly
       // match: [
-      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,30}$"/,
-      //   'mín: 10caracteres 1mayús 1minús 1número 1carácter especial,',
+
+      //   // /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
+      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"/,
+      //   // /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9!@#$%^&*]){8,30}$/
+      //   'mín: 8caracteres 1mayús 1minús 1número 1carácter especial,',
       // ],
-      required: [true, 'Por favor rellena tu contraseña'],
+      // required: [true, 'Por favor rellena tu contraseña'],
     },
     role: {
       type: String,
@@ -62,13 +92,13 @@ const UserSchema = new mongoose.Schema(
     acceptCommunication: {
       type: Boolean,
     },
-    //FIXME: delete after test - email confirmed
-    // confirmed: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    confirmed: {
+      type: Boolean,
+      default: false,
+    },
     avatar: String,
     role: String,
+    interested: [],
     tokens: [],
 
     eventIds: [{ type: ObjectId, ref: 'Event' }],
@@ -80,17 +110,14 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Agregar una propiedad virtual para la URL del avatar
 UserSchema.virtual('avatar_url').get(function () {
   if (this.avatar) {
     return `/assets/images/user/${this.avatar}`;
   }
-  // Si no hay avatar, puedes proporcionar una URL predeterminada o manejarlo de la manera que prefieras
-  return '/assets/images/user/avatar-default.png'; // Cambia la ruta según tu estructura de carpetas
+  return '/assets/images/user/avatar-default.png';
 });
 
 UserSchema.methods.toJSON = function () {
-  console.log(this.avatar_url);
   //const user = this.toObject();
   const user = this._doc;
   delete user.tokens;
@@ -102,7 +129,6 @@ UserSchema.methods.toJSON = function () {
   delete user.acceptPolicity;
   delete user._v;
 
-  // Agregar la URL del avatar
   user.avatar_url = this.avatar_url;
   return user;
 };

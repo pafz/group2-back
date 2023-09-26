@@ -2,8 +2,4 @@
 .DS_Store
 /scripts/
 
-.env
-
-config/nodemailer.js
-
-commets.js
+.env*

@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const ObjectId = mongoose.SchemaTypes.ObjectId;
 
-
 const validCategories = [
   "Finanzas e inversión",
   "Gestión empresarial",
@@ -12,14 +11,8 @@ const validCategories = [
   "Sociedad",
 ];
 
-const organization = [
-  "Edem",
-  "Lanzadera",
-  "MDE",
-  "Otro"
-  
-];
-
+const organization = ["Edem", "Lanzadera", "MDE", "Otro"];
+const modality = ["Presencial", "Online", "Semipresencial"]
 const EventSchema = new mongoose.Schema(
   {
     title: {
@@ -49,18 +42,26 @@ const EventSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: validCategories, 
+      enum: validCategories,
     },
     organization: {
       type: String,
       required: [true, "Organization is required"],
-      enum: organization, 
+      enum: organization,
     },
     time: {
       type: String,
       required: [true, "Time is required"],
-      
-    },    
+    },
+    timeEnd: {
+      type: String,
+      required: [true, "Time is required"],
+    },
+    modality: {
+      type: String,
+      required: [true, "Modality is required"],
+      enum: modality,
+    },
     image: String,
     likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
@@ -73,14 +74,14 @@ EventSchema.virtual("image_url").get(function () {
   if (this.image) {
     return `/assets/images/event/${this.image}`;
   }
-  
-  return "/assets/images/event/default-event.png"; 
+
+  return "/assets/images/event/default-event.png";
 });
 
 EventSchema.methods.toJSON = function () {
   const event = this._doc;
   delete event.createdAt;
-  delete event.updatedAt;  
+  delete event.updatedAt;
 
   event.image_url = this.image_url;
   return event;

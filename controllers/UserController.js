@@ -1,5 +1,5 @@
 const User = require('../models/User');
-// const transporter = require('../config/nodemailer'); //TODO: comentado nodemailer, activar cuando no se esté mas avanzado el código para validar
+const transporter = require('../config/nodemailer');
 require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
@@ -8,26 +8,34 @@ const jwt_secret = process.env.JWT_SECRET;
 
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
-//TODO: para dabta -> endpoint devolver solo _id del user
 //TODO: regex password, mail,
+//TODO: recoverPassword, resetPassword
 const UserController = {
-  // async userConfirm(req, res) {
-  //   try {
-  //     const token = req.query.emailToken;
-  //     const payload = jwt.verify(token, process.env.JWT_SECRET);
-  //     await User.findOneAndUpdate(
-  //       { email: payload.email },
-  //       { confirmed: true },
-  //       { new: true }
-  //     );
-  //     res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
-  //   } catch (error) {
-  //     console.error(error);
-  //     res
-  //       .status(500)
-  //       .json({ message: 'Hubo un error al confirmar al usuario' });
-  //   }
-  // },
+  async userConfirm(req, res) {
+    try {
+      const token = req.params.emailToken;
+      const user = await User.findOne({ 'tokens.token': token });
+      const validToken = jwt.verify(token, jwt_secret);
+      if (!user || !validToken) {
+        return res
+          .status(401)
+          .json({ message: 'El token no es válido o ha expirado' });
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
+        { 'tokens.token': token },
+        { confirmed: true, tokens: [] },
+        { new: true }
+      );
+
+      res.status(200).send('Su correo ha sido validado, ya puede hacer login!');
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ message: 'Hubo un error al confirmar al usuario' });
+    }
+  },
 
   async registerUser(req, res, next) {
     const {
@@ -43,19 +51,17 @@ const UserController = {
       acceptPolicity,
       acceptCommunication,
     } = req.body;
-    // const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
 
-    // //FIXME: works??
-    // const validateEmail = email => {
-    //   return emailRegex.test(email);
-    // };
-    // console.log(validateEmail()); // true
+    const emailRegex = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    const validateEmail = email => {
+      return emailRegex.test(email);
+    };
 
-    // if (email !== false) {
-    //   return res.status(400).json({
-    //     message: 'No válido. Por favor, proporciona un correo de válido',
-    //   });
-    // }
+    if (validateEmail(email) === false) {
+      return res.status(400).json({
+        message: 'No válido. Por favor, proporciona un correo de válido',
+      });
+    }
 
     try {
       const existingUser = await User.findOne({ email });
@@ -69,19 +75,10 @@ const UserController = {
           .json({ message: "Las passwords no son iguales" });
       }
 
+      const emailToken = jwt.sign({ mail: req.body.email }, jwt_secret, {
+        expiresIn: '48h',
+      });
       const hashedPassword = await bcrypt.hashSync(password, 10);
-      //TODO: descomenntar nodemailer
-      // const emailToken = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-      //   expiresIn: '48h',
-      // });
-      // const url = `http://localhost:3000/users/confirm` + emailToken;
-      // await transporter.sendMail({
-      //   to: req.body.email,
-      //   subject: 'Confirm Your Registration',
-      //   html: `<h3>Welcome, you're one step away from registering</h3>
-      //     <a href="${url}">Click to confirm your registration</a>`,
-      // });
-
       const user = await User.create({
         name,
         surname,
@@ -94,21 +91,25 @@ const UserController = {
         role,
         acceptPolicity,
         acceptCommunication,
-        // tokens: [{ token: emailToken.toString() }],
+        interested: [],
+        tokens: [{ token: emailToken.toString() }],
         avatar: req.file?.filename,
       });
 
-      //TODO: descomentar nodemailer
-      // await transporter.sendMail({
-      //   to: email,
-      //   subject: 'Registro realizado con éxito',
-      //   html: `<h3>Finaliza el registro a través de tu correo en el siguiente enlace:</h3>
-      //             <a href="${url}?emailToken=${emailToken}">Click para confirmar tu registro</a>`,
-      // });
-      res.status(201).json({
-        message: "Usuario registrado  exitosamente!",
+      const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
+      const url = `${BASE_URL}/users/confirm/${emailToken}`;
+
+      await transporter.sendMail({
+        to: email,
+        subject: 'MdE Confirmación de registro',
+        html: `<h3>Bienvenido a Marina de Eventos</h3>
+              <p>Para continuar por favor haz clic en este <a href="${url}">enlace</a></p>
+              <p>Si no puedes ver el enlace correctamente copia y pegar esta url en el navegador:</p>
+              ${url}`,
+      });
+      res.status(201).send({
+        message: 'Usuario creado con exito, por favor comprueba tu email.',
         user,
-        // token: emailToken, //TODO: descomentar nodemailaer
       });
     } catch (error) {
       console.error(error);
@@ -116,47 +117,66 @@ const UserController = {
     }
   },
 
-  //TODO: check of it works
-  //   async recoverPassword(req, res) {
-  //     try {
-  //       const recoverToken = jwt.sign(
-  //         { email: req.params.email },
-  //         process.env.JWT_SECRET,
-  //         {
-  //           expiresIn: '24h',
-  //         }
-  //       );
-  //       const url = API_URL + '/users/resetPassword/' + recoverToken;
-  //       await transporter.sendMail({
-  //         to: req.params.email,
-  //         subject: 'Recuperar Password',
-  //         html: `<h3>Recuperar Password</h3>
-  //           <a href="${url}">Recuperar Password</a>
-  //           El enlace expira in 24 hours
-  //         `,
-  //       });
-  //       res.send({
-  //         message: 'Se ha enviado un email a esa dirección proporcionada',
-  //       });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   },
+  async recoverPassword(req, res, next) {
+    const { email } = req.body;
 
-  //TODO: check of it works
-  //   async resetPassword(req, res) {
-  //     try {
-  //       const recoverToken = req.params.recoverToken;
-  //       const payload = jwt.verify(recoverToken, process.env.JWT_SECRET);
-  //       await User.findOneAndUpdate(
-  //         { email: payload.email },
-  //         { password: req.body.password }
-  //       );
-  //       res.send({ message: 'Password changed successfully' });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   },
+    try {
+      const existingUser = await User.findOne({ email });
+      if (!existingUser) {
+        return res
+          .status(201)
+          .json({ message: 'Por favor compruebe su correo' });
+      }
+
+      const token = jwt.sign({ recover: email }, jwt_secret, {
+        expiresIn: '48h',
+      });
+
+      await User.findOneAndUpdate({ email }, { tokens: [{ token }] });
+
+      const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
+      const url = `${BASE_URL}/passwordreset/${token}`;
+
+      await transporter.sendMail({
+        to: email,
+        subject: 'MdE recuperación de contraseña',
+        html: `<p>Para continuar por favor haz clic en este <a href="${url}">enlace</a></p>
+              <p>Si no puedes ver el enlace correctamente copia y pegar esta url en el navegador:</p>
+              ${url}`,
+      });
+      res.status(201).send({
+        message: 'Por favor compruebe su correo',
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  },
+
+  async resetPassword(req, res, next) {
+    const { password, token } = req.body;
+    try {
+      const existingUser = await User.findOne({ 'tokens.token': token });
+      const validToken = jwt.verify(token, jwt_secret);
+      if (!existingUser || !validToken) {
+        return res
+          .status(401)
+          .json({ message: 'El token no es válido o ha expirado' });
+      }
+
+      const hashedPassword = await bcrypt.hashSync(password, 10);
+      await User.findOneAndUpdate(
+        { 'tokens.token': token },
+        { password: hashedPassword, tokens: [] }
+      );
+      res.status(200).send({
+        message: 'Password actualizado con exito',
+      });
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  },
 
   async loginUser(req, res, next) {
     const { email, password } = req.body;
@@ -168,9 +188,9 @@ const UserController = {
         return res.status(401).json({ message: "Credenciales no válidas" });
       }
 
-      // if (!user.confirmed) {
-      //   return res.status(400).send({ message: 'Debes confirmar tu email' });
-      // }
+      if (!user.confirmed) {
+        return res.status(400).send({ message: 'Debes confirmar tu email' });
+      }
 
       const isMatch = bcrypt.compareSync(password, user.password);
 
@@ -194,7 +214,6 @@ const UserController = {
     }
   },
 
-  //FIXME: check if it works
   async logoutUser(req, res) {
     try {
       await User.findByIdAndUpdate(req.user._id, {
@@ -225,6 +244,61 @@ const UserController = {
     }
   },
 
+  async followUser(req, res) {
+    try {
+      const user = await User.findById(req.params._id);
+      const userConnected = await User.findById(req.user._id);
+
+      const alreadyFollow = user.followers.includes(req.user._id);
+
+      if (userConnected._id.toString() === user._id.toString()) {
+        return res.status(400).send({ message: 'No puedes auto seguirte' });
+      }
+
+      if (alreadyFollow) {
+        return res.status(400).send({ message: 'Ya sigues a este usuario' });
+      }
+
+      await User.findByIdAndUpdate(
+        req.params._id,
+        { $push: { followers: req.user._id } },
+        { new: true }
+      );
+      res.send({ message: 'Siguiendo al usuario con exito' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Ha habido un problema con tu follow' });
+    }
+  },
+
+  async unfollowUser(req, res) {
+    try {
+      const findUser = await User.findById(req.params._id);
+
+      const alreadyFollow = findUser.followers.includes(req.user._id);
+
+      if (alreadyFollow === false) {
+        return res
+          .status(400)
+          .send({ message: 'Acabas de dejar de seguir a este usuario' });
+      }
+
+      await User.updateOne(
+        findUser,
+        { $pull: { followers: req.user._id } },
+        { new: true }
+      );
+
+      res.send(findUser);
+    } catch (error) {
+      console.error(error);
+
+      res
+        .status(500)
+        .send({ message: 'Ha habido un problema con tu unfollow' });
+    }
+  },
+
   async update(req, res) {
     try {
       const user = await User.findByIdAndUpdate(
@@ -232,7 +306,6 @@ const UserController = {
         {
           name: req.body.name,
           surname: req.body.surname,
-          email: req.body.email,
           avatar: req.file?.filename,
         },
         { new: true }
@@ -243,21 +316,6 @@ const UserController = {
       }
 
       res.send({ message: 'User successfully updated', user });
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  async getUserConnected(req, res) {
-    try {
-      const user = await User.findById(req.user._id)
-        .populate({
-          path: 'orderIds',
-          populate: {
-            path: 'eventsIds',
-          },
-        })
-        .populate('wishList');
-      res.send(user);
     } catch (error) {
       console.error(error);
     }
