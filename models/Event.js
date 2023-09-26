@@ -62,6 +62,10 @@ const EventSchema = new mongoose.Schema(
       required: [true, "Modality is required"],
       enum: modality,
     },
+    speaker: {
+      type: String,
+      required: [true, "Speaker is required"],
+    },
     image: String,
     likes: [{ type: ObjectId, ref: "User" }],
     userId: { type: ObjectId, ref: "User" },
