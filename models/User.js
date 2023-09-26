@@ -19,6 +19,17 @@ const occupations = [
   'Estudiante',
 ];
 
+const interest = [
+  'crecimiento',
+  'inversión',
+  'comunicación',
+  'marketing',
+  'tecnología',
+  'producción',
+  'habilidades',
+  'liderazgo',
+];
+
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -98,7 +109,7 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: String,
     role: String,
-    interested: [],
+    interested: { type: [], enum: interest },
     tokens: [],
 
     eventIds: [{ type: ObjectId, ref: 'Event' }],
