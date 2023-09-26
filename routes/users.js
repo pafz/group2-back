@@ -8,11 +8,7 @@ const {
 const { uploadUserImages } = require('../middlewares/multer');
 
 router.get('/confirm/:emailToken', UserController.userConfirm);
-router.get(
-  '/getuserconnected',
-  authentication,
-  UserController.getUserConnected
-);
+router.get('/getuserconnected', UserController.getUserConnected);
 router.post(
   '/registeruser',
   uploadUserImages.single('avatar'),

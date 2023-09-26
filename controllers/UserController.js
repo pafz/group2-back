@@ -66,14 +66,15 @@ const UserController = {
     try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(409).json({ message: "El usuario ya existe" });
+        return res.status(409).json({ message: 'El usuario ya existe' });
       }
 
-      if (password !== password2) {
-        return res
-          .status(409)
-          .json({ message: "Las passwords no son iguales" });
-      }
+      //TODO: delete
+      // if (password !== password2) {
+      //   return res
+      //     .status(409)
+      //     .json({ message: "Las passwords no son iguales" });
+      // }
 
       const emailToken = jwt.sign({ mail: req.body.email }, jwt_secret, {
         expiresIn: '48h',
@@ -185,7 +186,7 @@ const UserController = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(401).json({ message: "Credenciales no válidas" });
+        return res.status(401).json({ message: 'Credenciales no válidas' });
       }
 
       if (!user.confirmed) {
@@ -195,12 +196,12 @@ const UserController = {
       const isMatch = bcrypt.compareSync(password, user.password);
 
       if (!isMatch) {
-        return res.status(401).json({ message: "Credenciales no válidas" });
+        return res.status(401).json({ message: 'Credenciales no válidas' });
       }
 
       //FIXME: change expiresIn h, depends on the event? avoid to logout during an event
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "48h",
+        expiresIn: '48h',
       });
       if (user.tokens.length > 4) user.tokens.shift();
       user.tokens.push(token);
@@ -209,7 +210,7 @@ const UserController = {
       res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user }); //TODO: añadido user para guardar todo el user en front
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Error durante el login" });
+      res.status(500).json({ message: 'Error durante el login' });
       next(error);
     }
   },
@@ -223,14 +224,20 @@ const UserController = {
     } catch (error) {
       console.error(error);
       res.status(500).send({
-        message: "Hubo un problema al desloguear",
+        message: 'Hubo un problema al desloguear',
       });
     }
   },
 
   async getUserConnected(req, res) {
     try {
-      const user = await User.findById(req.user._id)
+      const token = req.headers.authorization;
+      if (!token) {
+        res.send(null);
+        return;
+      }
+      const payload = jwt.verify(token, jwt_secret);
+      const user = await User.findOne({ _id: payload._id, tokens: token })
         .populate({
           path: 'orderIds',
           populate: {

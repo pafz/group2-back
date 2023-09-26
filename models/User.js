@@ -109,7 +109,7 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: String,
     role: String,
-    interested: { type: [], enum: interest },
+    interested: { type: [String], enum: interest },
     tokens: [],
 
     eventIds: [{ type: ObjectId, ref: 'Event' }],

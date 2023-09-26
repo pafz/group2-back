@@ -8,6 +8,9 @@ const jwt_secret = process.env.JWT_SECRET;
 const authentication = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).send({ message: 'You are not allowed' });
+    }
     const payload = jwt.verify(token, jwt_secret);
 
     const user = await User.findOne({ _id: payload._id, tokens: token });
