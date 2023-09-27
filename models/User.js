@@ -91,11 +91,6 @@ const UserSchema = new mongoose.Schema(
       // ],
       // required: [true, 'Por favor rellena tu contraseña'],
     },
-    role: {
-      type: String,
-      confirmed: Boolean,
-      tokens: [],
-    },
     acceptPolicity: {
       type: Boolean,
       required: [true, 'Por favor acepta la política'],
