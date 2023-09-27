@@ -15,6 +15,7 @@ router.post(
   UserController.registerUser
 );
 
+router.get('/turnstile', UserController.getTurnstileApiKey);
 router.post('/loginuser', UserController.loginUser);
 router.post('/recoverpassword', UserController.recoverPassword);
 router.put('/resetpassword', UserController.resetPassword);

@@ -37,6 +37,10 @@ const UserController = {
     }
   },
 
+  async getTurnstileApiKey(req, res, next) {
+    res.send(process.env.TURNSTILE_KEY);
+  },
+
   async registerUser(req, res, next) {
     const {
       name,
