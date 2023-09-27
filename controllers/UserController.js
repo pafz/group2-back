@@ -9,12 +9,11 @@ const jwt_secret = process.env.JWT_SECRET;
 const API_URL = 'http://localhost:3000';
 //TODO: hash email, like password
 //TODO: regex password, mail,
-//TODO: recoverPassword, resetPassword
 const UserController = {
   async userConfirm(req, res) {
     try {
       const token = req.params.emailToken;
-      const user = await User.findOne({ 'tokens.token': token });
+      const user = await User.findOne({ tokens: token });
       const validToken = jwt.verify(token, jwt_secret);
       if (!user || !validToken) {
         return res
@@ -137,7 +136,7 @@ const UserController = {
         expiresIn: '48h',
       });
 
-      await User.findOneAndUpdate({ email }, { tokens: [{ token }] });
+      await User.findOneAndUpdate({ email }, { tokens: [token] });
 
       const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
       const url = `${BASE_URL}/passwordreset/${token}`;
@@ -161,8 +160,9 @@ const UserController = {
   async resetPassword(req, res, next) {
     const { password, token } = req.body;
     try {
-      const existingUser = await User.findOne({ 'tokens.token': token });
+      const existingUser = await User.findOne({ tokens: token });
       const validToken = jwt.verify(token, jwt_secret);
+      console.log(!existingUser, !validToken);
       if (!existingUser || !validToken) {
         return res
           .status(401)
@@ -171,7 +171,7 @@ const UserController = {
 
       const hashedPassword = await bcrypt.hashSync(password, 10);
       await User.findOneAndUpdate(
-        { 'tokens.token': token },
+        { tokens: token },
         { password: hashedPassword, tokens: [] }
       );
       res.status(200).send({
