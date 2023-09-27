@@ -8,13 +8,16 @@ describe('events', () => {
   const event = {
     title: 'Testing',
     body: 'this is a test',
-    time: '20:00',
-    organization: 'Edem',
-    category: 'Marketing',
-    capacity: 400,
-    date: Date.now(),
     price: 20,
+    date: Date.now(),
     place: 'here',
+    capacity: 400,
+    category: 'Marketing',
+    organization: 'Edem',
+    time: '20:00',
+    timeEnd: '22:00',
+    modality: 'Presencial',
+    speaker: 'J.L',
   };
 
   beforeAll(() => addUser('testing2@test.com', 'test1234'));
