@@ -112,6 +112,7 @@ const UserSchema = new mongoose.Schema(
     followers: [{ type: ObjectId, ref: 'User' }],
     orderIds: [{ type: ObjectId, ref: 'Order' }],
     wishList: [{ type: ObjectId, ref: 'Event' }],
+    registered: [{ type: ObjectId, ref: 'Event' }],
   },
   { timestamps: true }
 );
