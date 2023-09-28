@@ -54,10 +54,10 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
  </p>
 
  <h1 align="center" style="color:red">Contextualización</h1>
- ![banner](./assets/images/metodologia.png)
+ <div style="text-align:center"><img src="./assets/images/metodologia.png" /></div>
 
   <h1 align="center" style="color:red">Herramientas metodológicas</h1>
- ![banner](./assets/images/herramientas.png)
+ <div style="text-align:center"><img src="./assets/images/herramientas.png" /></div>
 
 <!-- ABOUT THE OBJECTIVES -->
   <h1 align="center" style="color:red">
@@ -90,10 +90,13 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 
 ## Future Roadmap
 
-- [ ] Multer <a href="https://github.com/expressjs/multer/blob/master/doc/README-es.md" target="_blank">info</a> & <a href="https://www.webslesson.info/2022/05/upload-file-in-node-js-express-using-multer.html" target="_blank">HOW TO</a>
-- [ ] Frontend
-- [ ] More validations <a href="https://sequelize.org/docs/v6/core-concepts/validations-and-constraints/" target="_blank">Sequelize Validations & Constraints</a>
-- [ ] More associations <a href="https://sequelize.org/docs/v6/core-concepts/assocs/" target="_blank">Sequelize Associations</a>
+- [ ] <b>Métricas generales</b> <p>Tener una vista general de todos los eventos con la opción de personalizar y filtrar las métricas.</p>
+- [ ] <b>Chat interno</b> <p>Canal de comunicación interna entre departamentos.</p>
+- [ ] <b>Mejora de algoritmo</b> <p>Algoritmo de recomendación  según intereses y asistencia.</p>
+- [ ] <b>Espacios y salas</b> <p>Gestión de disponibilidad de salas.</p>
+- [ ] <b>Notificaciones</b> <p>Match de perfiles entre asistentes.</p>
+- [ ] <b>Networking</b> <p>Match de perfiles entre asistentes.</p>
+- [ ] <b>Asistente virtual</b> <p>Asistente virtual que brinda información antes del evento.</p>
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -101,7 +104,7 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 
 ## License
 
-Este proyecto ha sido realizado como trabajo de aprendizaje por Adrían Pastor, Yolanda López, Juanda y Patricia Fernández.
+Este proyecto ha sido realizado como trabajo de aprendizaje por Adrían Pastor, Yolanda López, Juanda Mayorga y Patricia Fernández.
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -118,10 +121,22 @@ Este proyecto ha sido realizado como trabajo de aprendizaje por Adrían Pastor, 
 ## Contact
 
 </p>
+Adrián Pastor
+
+<a href="https://www.linkedin.com/in/adrian-pastor-lopez-/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+
+Yolanda López
+
+<a href="https://www.linkedin.com/in/yolovi/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+
   <p align="justify">
+
+Juanda Mayorga
+
+<a href="https://www.linkedin.com/in/juandamt/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+
 Patricia Fernández
 
-<a href = "mailto:paferza@gmail.com"><img src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
 <a href="https://www.linkedin.com/in/patricia-fernandez-zamanillo/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
 
 </p>
