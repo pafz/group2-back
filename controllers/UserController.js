@@ -22,7 +22,7 @@ const UserController = {
       }
 
       const updatedUser = await User.findOneAndUpdate(
-        { 'tokens.token': token },
+        { tokens: token },
         { confirmed: true, tokens: [] },
         { new: true }
       );
@@ -96,7 +96,7 @@ const UserController = {
         acceptPolicity,
         acceptCommunication,
         interested: [],
-        tokens: [{ token: emailToken.toString() }],
+        tokens: [emailToken.toString()],
         avatar: req.file?.filename,
       });
 
@@ -162,7 +162,7 @@ const UserController = {
     try {
       const existingUser = await User.findOne({ tokens: token });
       const validToken = jwt.verify(token, jwt_secret);
-      console.log(!existingUser, !validToken);
+
       if (!existingUser || !validToken) {
         return res
           .status(401)

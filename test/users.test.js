@@ -65,7 +65,7 @@ describe('users', () => {
 
     test('user with valid token', async () => {
       const savedUser = await User.findOne({ email: user.email });
-      const token = savedUser.tokens[0].token;
+      const token = savedUser.tokens[0];
       await request(app).get(`/users/confirm/${token}`).expect(200);
     });
   });
@@ -131,7 +131,7 @@ describe('users', () => {
         .expect(201);
 
       const savedUser = await User.findOne({ email: user.email });
-      const token = savedUser.tokens[0].token;
+      const token = savedUser.tokens[0];
 
       await request(app)
         .put('/users/resetpassword')
