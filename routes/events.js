@@ -31,8 +31,6 @@ router.put(
 );
 router.put('/like/:_id', authentication, EventController.like);
 router.put('/dislike/:_id', authentication, EventController.dislike);
-router.put('/register/:_id', authentication, EventController.register);
-router.put('/unregister/:_id', authentication, EventController.unregister);
 
 router.delete('/delete/:_id', authentication, isAdmin, EventController.delete);
 

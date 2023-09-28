@@ -68,7 +68,6 @@ const EventSchema = new mongoose.Schema(
     },
     image: String,
     likes: [{ type: ObjectId, ref: 'User' }],
-    atendants: [{ type: ObjectId, ref: 'User' }],
     userId: { type: ObjectId, ref: 'User' },
     reviewIds: [{ type: ObjectId, ref: 'Review' }],
   },
