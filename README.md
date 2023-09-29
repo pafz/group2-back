@@ -129,6 +129,8 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
+[Link text](https://trello.com/b/x5KTBZVh/desaf%C3%ADo-de-tripulaciones)
+
 <!-- LICENSE -->
 
 ## License
