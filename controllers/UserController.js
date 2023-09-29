@@ -7,8 +7,7 @@ const jwt = require('jsonwebtoken');
 const jwt_secret = process.env.JWT_SECRET;
 
 const API_URL = 'http://localhost:3000';
-//TODO: hash email, like password
-//TODO: regex password, mail,
+
 const UserController = {
   async userConfirm(req, res) {
     try {
@@ -72,13 +71,6 @@ const UserController = {
         return res.status(409).json({ message: 'El usuario ya existe' });
       }
 
-      //TODO: delete
-      // if (password !== password2) {
-      //   return res
-      //     .status(409)
-      //     .json({ message: "Las passwords no son iguales" });
-      // }
-
       const emailToken = jwt.sign({ mail: req.body.email }, jwt_secret, {
         expiresIn: '48h',
       });
@@ -100,7 +92,7 @@ const UserController = {
         avatar: req.file?.filename,
       });
 
-      const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
+      const BASE_URL = 'http://localhost:3000';
       const url = `${BASE_URL}/users/confirm/${emailToken}`;
 
       await transporter.sendMail({
@@ -138,7 +130,7 @@ const UserController = {
 
       await User.findOneAndUpdate({ email }, { tokens: [token] });
 
-      const BASE_URL = 'http://localhost:3000'; // TODO: Usar la base url correcta (extraer a variable de entorno);
+      const BASE_URL = 'http://localhost:3000';
       const url = `${BASE_URL}/passwordreset/${token}`;
 
       await transporter.sendMail({
@@ -203,7 +195,6 @@ const UserController = {
         return res.status(401).json({ message: 'Credenciales no válidas' });
       }
 
-      //FIXME: change expiresIn h, depends on the event? avoid to logout during an event
       const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '48h',
       });
@@ -211,7 +202,7 @@ const UserController = {
       user.tokens.push(token);
       await user.save();
 
-      res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user }); //TODO: añadido user para guardar todo el user en front
+      res.status(200).json({ message: 'Bienvenidx ' + user.name, token, user });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Error durante el login' });

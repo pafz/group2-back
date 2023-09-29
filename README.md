@@ -1,7 +1,8 @@
-# BACKEND - Ejercicio
+# BACKEND - Proyecto final de Bootcamp
 
 <a name="top"></a>
-![banner](./assets/images/desafio-intro.png)
+
+<div style="text-align:center"><img src="assets/images/desafio-intro.png" width="300" height="300"></div>
 
  <h1 align="center" style="color:red">Desafío de tripulaciones</h1>
 
@@ -19,14 +20,17 @@ miembros del departamento de una empresa o
 simulando el emprendimiento de un proyecto propio.
 
   <br/>
-    <a href="https://github.com/pafz/group2-back"><strong>Uso de node + express y mysql/sequelize</strong></a>
+  <div style="text-align:center">
+    <a href="https://github.com/pafz/group2-back"><strong>Uso de node + express y mongodb/ mongoose</strong></a>
     <br />
     ·
     <a href="https://github.com/pafz/group2-back/issues">Report a Backend Bug</a>
     ·
+    <a href="https://github.com/yolovi/tripulaciones-front">Frontend proyect</a>
+    ·
     <a href="https://github.com/yolovi/tripulaciones-front/issues">Request a Frontend Bug</a>
     </p>
-
+  <div>
 </div>
 
  <h1 align="center" style="color:red">Desafío - Cliente</h1>
@@ -57,7 +61,28 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
  <div style="text-align:center"><img src="./assets/images/metodologia.png" /></div>
 
   <h1 align="center" style="color:red">Herramientas metodológicas</h1>
- <div style="text-align:center"><img src="./assets/images/herramientas.png" /></div>
+ <div style="text-align:center"><img src="./assets/images/herramientas.png"/></div>
+<div>
+<p>A través de Postman se fue creando una colleción de endpoints para ir probando el backend de la aplicación y también rellenar la DB de Mongo. Para mayor facilidad, en el entorno de trabajo se asignaron variables reutilizables y de fácil modificación:</p>
+<a href="https://documenter.getpostman.com/view/28235415/2s9YJZ5QXp" target="_blank"><img src="assets/images/postman.svg" target="_blank" width="100" height="100"></a>
+</div>
+<div>
+<p>Desde el primer momento del proyecto, se crea un tablero a través de la aplicación Trello para coordinarnos dentro del mismo equipo y sobre todo en entre las diferentes verticales. Revisándolo cada mañana durante el daily, creando nuevas tareas y marcando las finalizadas.</p>
+<a href="https://trello.com/b/x5KTBZVh/desaf%C3%ADo-de-tripulaciones" target="_blank"><img src="assets/images/Trello_logo.svg.png" target="_blank" width="100"></a>
+</div>
+<div>
+<p>El equipo de data realizó una API con los endpoints correspondientes para obtener la info necesaria como códigos QR, censor de texto, de imagen, ... </p>
+<a href="https://datapi-9xvl-dev.fl0.io/" target="_blank"><img src="assets/images/Endpoints.png" target="_blank" width="100"></a>
+</div>
+<div>
+<p>Para testear el backend durante el desarrollo de la aplicación se utiliza Jest, que no es solo una biblioteca, es un marco de prueba. Significa que viene con una biblioteca de afirmaciones, un corredor de pruebas y soporte para cosas. Como ha sido diseñado específicamente para probar las aplicaciones React, también se puede utilizar en otros marcos de JavaScript.
+</p>
+<img src="assets/images/jest-logo-png-transparent.png" width="100">
+</div>
+<p>Usando MongoDB Atlas, que es un servicio de Cloud Database (o Base de Datos en la Nube), se crean y administran tres BBDD Mongo, una para los test, otra para los developers y la tercera para producción, la cual se comparte con el equipo de data para manejar los datos reales y poder trabajar ensuciar o eliminar BBDD.
+</p>
+<img src="assets/images/mongo-db.png" width="600">
+</div>
 
 <!-- ABOUT THE OBJECTIVES -->
   <h1 align="center" style="color:red">
@@ -65,6 +90,7 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 
 ## Objetivos
 
+<div style="text-align:left">
 <views>
           <ul>
             Compotencias
@@ -83,6 +109,7 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
           </ul>
 
 </views>
+</div>
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -90,6 +117,7 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 
 ## Future Roadmap
 
+<div style="text-align:left">
 - [ ] <b>Métricas generales</b> <p>Tener una vista general de todos los eventos con la opción de personalizar y filtrar las métricas.</p>
 - [ ] <b>Chat interno</b> <p>Canal de comunicación interna entre departamentos.</p>
 - [ ] <b>Mejora de algoritmo</b> <p>Algoritmo de recomendación  según intereses y asistencia.</p>
@@ -97,6 +125,7 @@ Ser capaces de hacer entender a la audiencia y jurado la solución propuesta y e
 - [ ] <b>Notificaciones</b> <p>Match de perfiles entre asistentes.</p>
 - [ ] <b>Networking</b> <p>Match de perfiles entre asistentes.</p>
 - [ ] <b>Asistente virtual</b> <p>Asistente virtual que brinda información antes del evento.</p>
+</div>
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -110,17 +139,18 @@ Este proyecto ha sido realizado como trabajo de aprendizaje por Adrían Pastor, 
 
 <!-- PREVIEW -->
 
-## Preview
+<!-- ## Preview
 
 - General overview
 
-![foto](./assets/img/candy.png)
+![foto]() -->
 
 <!-- CONTACT -->
 
 ## Contact
 
 </p>
+<div>
 Adrián Pastor
 
 <a href="https://www.linkedin.com/in/adrian-pastor-lopez-/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
@@ -128,8 +158,6 @@ Adrián Pastor
 Yolanda López
 
 <a href="https://www.linkedin.com/in/yolovi/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
-
-  <p align="justify">
 
 Juanda Mayorga
 
@@ -139,5 +167,5 @@ Patricia Fernández
 
 <a href="https://www.linkedin.com/in/patricia-fernandez-zamanillo/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
 
-</p>
+</div>
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>

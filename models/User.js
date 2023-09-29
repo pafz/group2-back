@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
-//delete isValidPassword??:
 const { isValidPassword } = require('mongoose-custom-validators');
 const ObjectId = mongoose.SchemaTypes.ObjectId;
-// const Joi = require('joi');
 
 const levels = ['1', '2'];
 
@@ -53,13 +51,10 @@ const UserSchema = new mongoose.Schema(
       match: [/.+\@.+\..+/, 'Por favor inserta un email válido'],
       required: [true, 'Por favor rellena tu email'],
     },
-    //TODO: BSON Date data type mongo DB & https://stackoverflow.com/questions/22041785/find-whether-someone-got-a-birthday-in-the-next-30-days-with-mongo
-    //FIXME: necessary to validate? A limit of age old?
     bday: {
       type: Date,
       required: [true, 'Por favor rellena tu fecha de nacimiento'],
     },
-    //FIXME: validates with the API?
     tel: {
       type: String,
       required: [true, 'Por favor rellena tu teléfono'],
@@ -74,22 +69,12 @@ const UserSchema = new mongoose.Schema(
       enum: occupations,
       required: [true, 'Por favor selecciona una opción Yes'],
     },
-    //https://www.npmjs.com/package/mongoose-custom-validators
     password: {
       type: String,
       validate: {
         validator: isValidPassword,
         message: 'mín: 8caracteres 1mayús 1minús 1número 1carácter especial',
       },
-      //FIXME: do match works properly
-      // match: [
-
-      //   // /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/,
-      //   /"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})"/,
-      //   // /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9!@#$%^&*]){8,30}$/
-      //   'mín: 8caracteres 1mayús 1minús 1número 1carácter especial,',
-      // ],
-      // required: [true, 'Por favor rellena tu contraseña'],
     },
     acceptPolicity: {
       type: Boolean,
@@ -124,13 +109,11 @@ UserSchema.virtual('avatar_url').get(function () {
 });
 
 UserSchema.methods.toJSON = function () {
-  //const user = this.toObject();
   const user = this._doc;
   delete user.tokens;
   delete user.password;
   delete user.createdAt;
   delete user.updatedAt;
-  //FIXME: delete user.confirmed;
   delete user.role;
   delete user.acceptPolicity;
   delete user._v;
